@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Germaine Countdown</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="background-decoration background-decoration--left"></div>
+    <div class="background-decoration background-decoration--right"></div>
+
+    <nav class="nav">
+      <div class="nav-left">
+        <span class="nav-logo"></span>
+        <span class="nav-title">Germaine.</span>
+      </div>
+      <div class="nav-right">
+        <a href="/home" class="nav-link">Home</a>
+        <a href="/countdown" class="nav-link nav-link--active">Countdown</a>
+        <a href="/mystery" class="nav-link">Mystery box</a>
+        <a href="/logout" class="nav-link nav-link--logout">Log out</a>
+      </div>
+    </nav>
+
+    <main class="container" style="margin-top: 70px">
+      <header class="header">
+        <h1 class="title">Countdown</h1>
+        <p class="subtitle">
+          Counting down to <span>20 August 2026</span>
+        </p>
+      </header>
+
+      <section class="layout">
+        <div class="rabbit-card" aria-hidden="true">
+          <div id="rabbit-canvas"></div>
+          <div class="heart-spray">
+            <span class="heart heart--1">♥</span>
+            <span class="heart heart--2">♥</span>
+            <span class="heart heart--3">♥</span>
+            <span class="heart heart--4">♥</span>
+          </div>
+          <p class="rabbit-name">
+            Germaine <br />
+            &amp; Snowy
+          </p>
+        </div>
+
+        <div class="content-column">
+          <section class="countdown-card">
+            <div id="countdown" class="countdown">
+              <div class="time-block">
+                <span id="days" class="time-number">00</span>
+                <span class="time-label">days</span>
+              </div>
+              <div class="time-block">
+                <span id="hours" class="time-number">00</span>
+                <span class="time-label">hours</span>
+              </div>
+              <div class="time-block">
+                <span id="minutes" class="time-number">00</span>
+                <span class="time-label">minutes</span>
+              </div>
+              <div class="time-block">
+                <span id="seconds" class="time-number">00</span>
+                <span class="time-label">seconds</span>
+              </div>
+            </div>
+
+            <p id="message" class="message"></p>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="js/rabbit.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+  </html>
+

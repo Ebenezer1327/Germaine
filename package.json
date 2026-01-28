@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,7 +20,14 @@
   "homepage": "https://github.com/Ebenezer1327/Germaine#readme",
   "description": "",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.3",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "pg": "^8.17.2",
+    "three": "^0.182.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }

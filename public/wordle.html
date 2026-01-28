@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wordle · Germaine & Snowy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="background-decoration background-decoration--left"></div>
+    <div class="background-decoration background-decoration--right"></div>
+
+    <nav class="nav">
+      <div class="nav-left">
+        <span class="nav-logo"></span>
+        <span class="nav-title">Germaine.</span>
+      </div>
+      <div class="nav-right">
+        <a href="/home" class="nav-link">Home</a>
+        <a href="/countdown" class="nav-link">Countdown</a>
+        <a href="/mystery" class="nav-link">Mystery box</a>
+        <a href="/logout" class="nav-link nav-link--logout">Log out</a>
+      </div>
+    </nav>
+
+    <main class="container wordle-container">
+      <a href="/games" class="wordle-back-link">← Back to Games</a>
+      <div class="wordle-card">
+        <h1 class="wordle-title">Wordle</h1>
+        <p class="wordle-subtitle">Guess the 5-letter word!</p>
+        
+        <div class="wordle-game">
+          <div id="wordle-grid" class="wordle-grid"></div>
+          
+          <div class="wordle-keyboard">
+            <div class="keyboard-row">
+              <button class="key" data-key="Q">Q</button>
+              <button class="key" data-key="W">W</button>
+              <button class="key" data-key="E">E</button>
+              <button class="key" data-key="R">R</button>
+              <button class="key" data-key="T">T</button>
+              <button class="key" data-key="Y">Y</button>
+              <button class="key" data-key="U">U</button>
+              <button class="key" data-key="I">I</button>
+              <button class="key" data-key="O">O</button>
+              <button class="key" data-key="P">P</button>
+            </div>
+            <div class="keyboard-row">
+              <button class="key" data-key="A">A</button>
+              <button class="key" data-key="S">S</button>
+              <button class="key" data-key="D">D</button>
+              <button class="key" data-key="F">F</button>
+              <button class="key" data-key="G">G</button>
+              <button class="key" data-key="H">H</button>
+              <button class="key" data-key="J">J</button>
+              <button class="key" data-key="K">K</button>
+              <button class="key" data-key="L">L</button>
+            </div>
+            <div class="keyboard-row">
+              <button class="key key--wide" id="enter-key" data-key="Enter">Enter</button>
+              <button class="key" data-key="Z">Z</button>
+              <button class="key" data-key="X">X</button>
+              <button class="key" data-key="C">C</button>
+              <button class="key" data-key="V">V</button>
+              <button class="key" data-key="B">B</button>
+              <button class="key" data-key="N">N</button>
+              <button class="key" data-key="M">M</button>
+              <button class="key key--wide" id="backspace-key" data-key="Backspace">⌫</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="wordle-message" class="wordle-message"></div>
+      </div>
+    </main>
+
+    <script src="js/wordle.js"></script>
+  </body>
+</html>

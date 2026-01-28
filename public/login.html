@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log in · Germaine & Snowy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="auth-page">
+    <div class="background-decoration background-decoration--left"></div>
+    <div class="background-decoration background-decoration--right"></div>
+
+    <main class="auth-container">
+      <header class="auth-header">
+        <h1 class="title">Welcome back, Germaine ✿</h1>
+      </header>
+
+      <section class="auth-card">
+        <form class="auth-form" method="post" action="/login">
+          <div class="auth-field">
+            <label for="username">Username</label>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              autocomplete="username"
+              required
+              placeholder="username"
+            />
+          </div>
+
+          <div class="auth-field">
+            <label for="password">Password</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+              placeholder="Your password"
+            />
+          </div>
+
+          <button type="submit" class="btn btn--primary auth-submit">
+            Log in
+          </button>
+
+        </form>
+      </section>
+
+      <a href="/" class="auth-back-link">← Back to countdown</a>
+    </main>
+  </body>
+  </html>
+

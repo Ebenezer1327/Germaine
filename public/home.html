@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Germaine & Snowy · Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <script>
+      // Carousel functionality
+      (function() {
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.carousel-dot');
+        const prevBtn = document.querySelector('.carousel-btn--prev');
+        const nextBtn = document.querySelector('.carousel-btn--next');
+        let currentSlide = 0;
+        let autoPlayInterval;
+
+        function showSlide(index) {
+          slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === index);
+          });
+          dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === index);
+          });
+          currentSlide = index;
+        }
+
+        function nextSlide() {
+          const next = (currentSlide + 1) % slides.length;
+          showSlide(next);
+        }
+
+        function prevSlide() {
+          const prev = (currentSlide - 1 + slides.length) % slides.length;
+          showSlide(prev);
+        }
+
+        function startAutoPlay() {
+          autoPlayInterval = setInterval(nextSlide, 4000);
+        }
+
+        function stopAutoPlay() {
+          clearInterval(autoPlayInterval);
+        }
+
+        // Event listeners
+        nextBtn?.addEventListener('click', () => {
+          nextSlide();
+          stopAutoPlay();
+          startAutoPlay();
+        });
+
+        prevBtn?.addEventListener('click', () => {
+          prevSlide();
+          stopAutoPlay();
+          startAutoPlay();
+        });
+
+        dots.forEach((dot, index) => {
+          dot.addEventListener('click', () => {
+            showSlide(index);
+            stopAutoPlay();
+            startAutoPlay();
+          });
+        });
+
+        // Pause on hover
+        const carouselContainer = document.querySelector('.carousel-container');
+        carouselContainer?.addEventListener('mouseenter', stopAutoPlay);
+        carouselContainer?.addEventListener('mouseleave', startAutoPlay);
+
+        // Start auto-play
+        startAutoPlay();
+      })();
+    </script>
+    <div class="background-decoration background-decoration--left"></div>
+    <div class="background-decoration background-decoration--right"></div>
+
+    <nav class="nav">
+      <div class="nav-left">
+        <span class="nav-logo"></span>
+        <span class="nav-title">Germaine.</span>
+      </div>
+      <div class="nav-right">
+        <a href="/home" class="nav-link nav-link--active">Home</a>
+        <a href="/countdown" class="nav-link">Countdown</a>
+        <a href="/mystery" class="nav-link">Mystery box</a>
+        <a href="/logout" class="nav-link nav-link--logout">Log out</a>
+      </div>
+    </nav>
+
+    <main class="container home-main">
+      <div class="bento-grid">
+        <div class="bento-item bento-item--large bento-item--carousel">
+          <div class="carousel-container">
+            <div class="carousel-slides">
+              <div class="carousel-slide active">
+                <div class="carousel-image-placeholder">Image 1</div>
+                <div class="carousel-overlay"></div>
+              </div>
+              <div class="carousel-slide">
+                <div class="carousel-image-placeholder">Image 2</div>
+                <div class="carousel-overlay"></div>
+              </div>
+              <div class="carousel-slide">
+                <div class="carousel-image-placeholder">Image 3</div>
+                <div class="carousel-overlay"></div>
+              </div>
+            </div>
+            <button class="carousel-btn carousel-btn--prev" aria-label="Previous slide">‹</button>
+            <button class="carousel-btn carousel-btn--next" aria-label="Next slide">›</button>
+            <div class="carousel-dots">
+              <span class="carousel-dot active" data-slide="0"></span>
+              <span class="carousel-dot" data-slide="1"></span>
+              <span class="carousel-dot" data-slide="2"></span>
+            </div>
+          </div>
+        </div>
+        <a href="/games" class="bento-item bento-item--game">
+          <div class="bento-content">
+            <div class="bento-game-icon">🎮</div>
+            <h3 class="bento-title">Mini Games</h3>
+            <p class="bento-text">Play Games</p>
+          </div>
+        </a>
+        <div class="bento-item">
+          <div class="bento-content">
+            <h3 class="bento-title">Card 3</h3>
+            <p class="bento-text">Add your content here</p>
+          </div>
+        </div>
+        <div class="bento-item bento-item--tall">
+          <div class="bento-content">
+            <h3 class="bento-title">Card 4</h3>
+            <p class="bento-text">Add your content here</p>
+          </div>
+        </div>
+        <a href="/journal" class="bento-item bento-item--journal">
+          <div class="bento-content">
+            <div class="bento-journal-icon">💕</div>
+            <h3 class="bento-title">My Journal</h3>
+            <p class="bento-text">Write your thoughts</p>
+          </div>
+        </a>
+      </div>
+    </main>
+  </body>
+  </html>
+

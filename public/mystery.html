@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Germaine & Snowy · Mystery box</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="background-decoration background-decoration--left"></div>
+    <div class="background-decoration background-decoration--right"></div>
+
+    <nav class="nav">
+      <div class="nav-left">
+        <span class="nav-logo"></span>
+        <span class="nav-title">Germaine</span>
+      </div>
+      <div class="nav-right">
+        <a href="/home" class="nav-link">Home</a>
+        <a href="/countdown" class="nav-link">Countdown</a>
+        <a href="/mystery" class="nav-link nav-link--active">Mystery box</a>
+        <a href="/logout" class="nav-link nav-link--logout">Log out</a>
+      </div>
+    </nav>
+
+    <main class="container mystery-container">
+      <section class="mystery-card">
+        <h1 class="title">Mystery boxes</h1>
+        <p class="mystery-hint">
+          
+        </p>
+
+        <div class="mystery-grid" id="mysteryGrid"></div>
+      </section>
+    </main>
+
+    <script>
+      const grid = document.getElementById("mysteryGrid");
+
+      // 24 boxes with specific unlock dates (all at 9:00 AM SGT = 1:00 AM UTC)
+      const boxes = [
+        { id: 1, target: new Date("2026-03-09T01:00:00Z") },
+        { id: 2, target: new Date("2026-03-16T01:00:00Z") },
+        { id: 3, target: new Date("2026-03-23T01:00:00Z") },
+        { id: 4, target: new Date("2026-03-30T01:00:00Z") },
+        { id: 5, target: new Date("2026-04-06T01:00:00Z") },
+        { id: 6, target: new Date("2026-04-13T01:00:00Z") },
+        { id: 7, target: new Date("2026-04-20T01:00:00Z") },
+        { id: 8, target: new Date("2026-04-27T01:00:00Z") },
+        { id: 9, target: new Date("2026-05-04T01:00:00Z") },
+        { id: 10, target: new Date("2026-05-11T01:00:00Z") },
+        { id: 11, target: new Date("2026-05-18T01:00:00Z") },
+        { id: 12, target: new Date("2026-05-25T01:00:00Z") },
+        { id: 13, target: new Date("2026-06-01T01:00:00Z") },
+        { id: 14, target: new Date("2026-06-08T01:00:00Z") },
+        { id: 15, target: new Date("2026-06-15T01:00:00Z") },
+        { id: 16, target: new Date("2026-06-22T01:00:00Z") },
+        { id: 17, target: new Date("2026-06-29T01:00:00Z") },
+        { id: 18, target: new Date("2026-07-06T01:00:00Z") },
+        { id: 19, target: new Date("2026-07-13T01:00:00Z") },
+        { id: 20, target: new Date("2026-07-20T01:00:00Z") },
+        { id: 21, target: new Date("2026-07-27T01:00:00Z") },
+        { id: 22, target: new Date("2026-08-03T01:00:00Z") },
+        { id: 23, target: new Date("2026-08-10T01:00:00Z") },
+        { id: 24, target: new Date("2026-08-17T01:00:00Z") },
+      ];
+
+      function pad(n, size = 2) {
+        return String(n).padStart(size, "0");
+      }
+
+      if (grid) {
+        boxes.forEach((boxInfo) => {
+          const wrapper = document.createElement("div");
+          wrapper.className = "mystery-grid-item";
+
+          const box = document.createElement("div");
+          box.className = "mystery-box mystery-box--locked";
+          box.dataset.index = String(boxInfo.id);
+
+          const lid = document.createElement("div");
+          lid.className = "mystery-lid";
+          const body = document.createElement("div");
+          body.className = "mystery-body";
+          const chain = document.createElement("div");
+          chain.className = "mystery-chain";
+          const lock = document.createElement("div");
+          lock.className = "mystery-lock";
+
+          box.appendChild(lid);
+          box.appendChild(body);
+          box.appendChild(chain);
+          box.appendChild(lock);
+
+          const label = document.createElement("p");
+          label.className = "mystery-box-label";
+          label.textContent = `Box ${boxInfo.id}`;
+
+          const timer = document.createElement("p");
+          timer.className = "mystery-timer";
+          timer.innerHTML =
+            'In <span class="d">000</span>d <span class="h">00</span>h <span class="m">00</span>m <span class="s">00</span>s';
+
+          wrapper.appendChild(box);
+          wrapper.appendChild(label);
+          wrapper.appendChild(timer);
+
+          grid.appendChild(wrapper);
+
+          box.addEventListener("click", () => {
+            if (!box.classList.contains("mystery-box--ready")) return;
+            box.classList.toggle("mystery-box--open");
+          });
+
+          boxInfo.elements = {
+            box,
+            dEl: timer.querySelector(".d"),
+            hEl: timer.querySelector(".h"),
+            mEl: timer.querySelector(".m"),
+            sEl: timer.querySelector(".s"),
+          };
+        });
+
+        function updateAll() {
+          const now = new Date();
+
+          boxes.forEach((info) => {
+            const { box, dEl, hEl, mEl, sEl } = info.elements || {};
+            if (!box || !dEl || !hEl || !mEl || !sEl) return;
+
+            const diff = info.target - now;
+            if (diff <= 0) {
+              dEl.textContent = "000";
+              hEl.textContent = "00";
+              mEl.textContent = "00";
+              sEl.textContent = "00";
+              box.classList.remove("mystery-box--locked");
+              box.classList.add("mystery-box--ready");
+              return;
+            }
+
+            const totalSeconds = Math.floor(diff / 1000);
+            const seconds = totalSeconds % 60;
+            const totalMinutes = Math.floor(totalSeconds / 60);
+            const minutes = totalMinutes % 60;
+            const totalHours = Math.floor(totalMinutes / 60);
+            const hours = totalHours % 24;
+
+            const days = Math.floor(totalHours / 24);
+
+            dEl.textContent = pad(days, 3);
+            hEl.textContent = pad(hours);
+            mEl.textContent = pad(minutes);
+            sEl.textContent = pad(seconds);
+          });
+        }
+
+        updateAll();
+        setInterval(updateAll, 1000);
+      }
+    </script>
+  </body>
+  </html>
+

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Germaine Countdown</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="background-decoration background-decoration--left"></div>
+    <div class="background-decoration background-decoration--right"></div>
+
+    <main class="container">
+      <header class="header header--with-login">
+        <div class="header-text">
+          <h1 class="title">Hello Germaine</h1>
+          <p class="subtitle">
+            Counting down to <span>20 August 2026</span>
+          </p>
+        </div>
+        <a href="/login" class="btn btn--outline header-login">Log in</a>
+      </header>
+
+      <section class="layout">
+        <div class="rabbit-card" aria-hidden="true">
+          <div id="rabbit-canvas"></div>
+          <div class="heart-spray">
+            <span class="heart heart--1">♥</span>
+            <span class="heart heart--2">♥</span>
+            <span class="heart heart--3">♥</span>
+            <span class="heart heart--4">♥</span>
+          </div>
+          <p class="rabbit-name">
+            Germaine <br />
+            &amp; Snowy
+          </p>
+        </div>
+
+        <div class="content-column">
+          <section class="countdown-card">
+            <div id="countdown" class="countdown">
+              <div class="time-block">
+                <span id="days" class="time-number">00</span>
+                <span class="time-label">days</span>
+              </div>
+              <div class="time-block">
+                <span id="hours" class="time-number">00</span>
+                <span class="time-label">hours</span>
+              </div>
+              <div class="time-block">
+                <span id="minutes" class="time-number">00</span>
+                <span class="time-label">minutes</span>
+              </div>
+              <div class="time-block">
+                <span id="seconds" class="time-number">00</span>
+                <span class="time-label">seconds</span>
+              </div>
+            </div>
+
+            <p id="message" class="message"></p>
+          </section>
+
+          <!-- login button moved to header -->
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="js/rabbit.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+  </html>
+

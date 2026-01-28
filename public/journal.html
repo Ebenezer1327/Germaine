@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Journal · Germaine & Snowy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="background-decoration background-decoration--left"></div>
+    <div class="background-decoration background-decoration--right"></div>
+
+    <nav class="nav">
+      <div class="nav-left">
+        <span class="nav-logo"></span>
+        <span class="nav-title">Germaine.</span>
+      </div>
+      <div class="nav-right">
+        <a href="/home" class="nav-link">Home</a>
+        <a href="/countdown" class="nav-link">Countdown</a>
+        <a href="/mystery" class="nav-link">Mystery box</a>
+        <a href="/logout" class="nav-link nav-link--logout">Log out</a>
+      </div>
+    </nav>
+
+    <main class="container journal-container">
+      <div class="journal-card">
+        <div class="journal-header">
+          <h1 class="journal-title">My Journal</h1>
+          <p class="journal-subtitle">Write anything you want here... I WONT SEE!</p>
+        </div>
+
+        <div class="journal-editor">
+          <div class="journal-folder-section">
+            <div class="journal-folder-selector">
+              <label for="folder-select" class="journal-folder-label">📁 Folder:</label>
+              <select id="folder-select" class="journal-folder-select">
+                <option value="">No Folder</option>
+              </select>
+              <button id="create-folder-btn" class="journal-folder-create-btn">+ New Folder</button>
+            </div>
+          </div>
+
+          <textarea 
+            id="journal-textarea" 
+            class="journal-textarea" 
+            placeholder="Start writing your thoughts here... ✨"
+            rows="10"
+          ></textarea>
+          
+          <div class="journal-media-section">
+            <label class="journal-upload-btn">
+              📷 Upload Media
+              <input type="file" id="image-upload" accept="image/*" multiple style="display: none;">
+            </label>
+            <div id="journal-image-preview" class="journal-image-preview">
+              <p class="journal-preview-placeholder">No images selected</p>
+            </div>
+          </div>
+
+          <button id="save-journal-btn" class="journal-save-btn">Save Entry</button>
+        </div>
+
+        <!-- Folder Creation Modal -->
+        <div id="folder-modal" class="journal-folder-modal">
+          <div class="journal-folder-modal-content">
+            <span class="journal-folder-modal-close">&times;</span>
+            <h3>Create New Folder</h3>
+            <input type="text" id="folder-name-input" class="journal-folder-name-input" placeholder="Folder name (e.g., May, June)">
+            <button id="folder-create-confirm-btn" class="journal-folder-confirm-btn">Create</button>
+          </div>
+        </div>
+
+        <div id="journal-message" class="journal-message"></div>
+
+        <div class="journal-entries">
+          <h2 class="journal-entries-title">Previous Entries</h2>
+          <div id="journal-entries-list" class="journal-entries-list">
+            <p class="journal-loading">Loading...</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Image Modal -->
+    <div id="image-modal" class="journal-image-modal">
+      <span class="journal-modal-close">&times;</span>
+      <img id="modal-image" class="journal-modal-image" src="" alt="Full size image">
+    </div>
+
+    <script src="js/journal.js"></script>
+  </body>
+</html>
