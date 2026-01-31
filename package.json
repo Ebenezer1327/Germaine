@@ -25,9 +25,12 @@
     "express": "^5.2.1",
     "express-session": "^1.19.0",
     "pg": "^8.17.2",
-    "three": "^0.182.0"
+    "pureimage": "^0.4.18",
+    "three": "^0.182.0",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
+    "jimp": "^1.6.0",
     "nodemon": "^3.1.9"
   }
 }

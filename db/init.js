@@ -95,6 +95,36 @@ async function initDb(pool) {
     }
 
     console.log('Ensured users exist: germaine, admin');
+
+    // Create todos table if it doesn't exist
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS todos (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        title TEXT NOT NULL,
+        description TEXT,
+        due_date TIMESTAMP,
+        reminder_time TIMESTAMP,
+        completed BOOLEAN DEFAULT FALSE,
+        reminder_sent BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log('Ensured todos table exists');
+
+    // Create push_subscriptions table if it doesn't exist
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS push_subscriptions (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        endpoint TEXT UNIQUE NOT NULL,
+        p256dh TEXT NOT NULL,
+        auth TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log('Ensured push_subscriptions table exists');
+
   } catch (err) {
     console.error('Failed to initialize DB:', err.message);
   }

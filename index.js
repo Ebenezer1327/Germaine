@@ -6,6 +6,7 @@ const { initDb } = require('./db/init');
 const { setupPageRoutes } = require('./routes/pages');
 const { setupAuthRoutes } = require('./routes/auth');
 const { setupApiRoutes } = require('./routes/api');
+const { initializePush, checkAndSendReminders } = require('./services/pushService');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,7 +19,8 @@ app.use(session({
   cookie: { 
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    sameSite: 'lax' // Ensures cookie is sent with same-site fetch on iOS
   }
 }));
 
@@ -39,6 +41,9 @@ const pool = new Pool({
 // Initialize database
 initDb(pool);
 
+// Initialize push notification service
+const pushEnabled = initializePush();
+
 // Setup routes
 setupPageRoutes(app);
 setupAuthRoutes(app, pool);
@@ -46,4 +51,19 @@ setupApiRoutes(app, pool);
 
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
+  
+  // Start reminder checker if push is enabled
+  if (pushEnabled) {
+    // Check for due reminders every minute
+    const REMINDER_CHECK_INTERVAL = 60 * 1000; // 1 minute
+    
+    setInterval(async () => {
+      const result = await checkAndSendReminders(pool);
+      if (result.reminders > 0) {
+        console.log(`Sent ${result.reminders} reminder notification(s)`);
+      }
+    }, REMINDER_CHECK_INTERVAL);
+    
+    console.log('Reminder checker started (checking every minute)');
+  }
 });
