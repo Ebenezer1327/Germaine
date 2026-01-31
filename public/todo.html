@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>Games · Germaine & Snowy</title>
+    <title>To-Do · Germaine & Snowy</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -35,79 +35,76 @@
         <a href="/home" class="nav-link">Home</a>
         <a href="/countdown" class="nav-link">Countdown</a>
         <a href="/mystery" class="nav-link">Mystery box</a>
-        <a href="/todo" class="nav-link">To-Do</a>
+        <a href="/todo" class="nav-link nav-link--active">To-Do</a>
         <a href="/logout" class="nav-link nav-link--logout">Log out</a>
       </div>
       <div class="nav-overlay" id="nav-overlay"></div>
     </nav>
 
-    <main class="container games-container">
-      <div class="games-header">
-        <h1 class="games-title">Games</h1>
-      </div>
-
-      <div class="games-grid">
-        <a href="/wordle" class="game-card">
-          <div class="game-card-icon">📝</div>
-          <h3 class="game-card-title">Wordle</h3>
-          <p class="game-card-desc">Guess the 5-letter word</p>
-        </a>
-
-        <div class="game-card game-card--coming-soon">
-          <div class="game-card-icon">🎯</div>
-          <h3 class="game-card-title">Game 2</h3>
-          <p class="game-card-desc">Coming soon</p>
+    <main class="container todo-container">
+      <div class="todo-card">
+        <div class="todo-header">
+          <h1 class="todo-title">My To-Do List</h1>
+          <p class="todo-subtitle">Keep track of your tasks</p>
         </div>
 
-        <div class="game-card game-card--coming-soon">
-          <div class="game-card-icon">🧩</div>
-          <h3 class="game-card-title">Game 3</h3>
-          <p class="game-card-desc">Coming soon</p>
+        <!-- Notification Permission Banner -->
+        <div id="notification-banner" class="notification-banner" style="display: none;">
+          <div class="notification-banner-content">
+            <span class="notification-banner-icon">🔔</span>
+            <div class="notification-banner-text">
+              <strong>Enable Notifications</strong>
+              <p>Get reminders for your tasks on your phone!</p>
+            </div>
+            <button id="enable-notifications-btn" class="btn btn--primary notification-btn">Enable</button>
+            <button id="dismiss-banner-btn" class="notification-dismiss">×</button>
+          </div>
+          <div id="ios-instructions" class="ios-instructions" style="display: none;">
+            <p><strong>For iPhone:</strong></p>
+            <ol>
+              <li>Tap the Share button (📤) at the bottom of Safari</li>
+              <li>Scroll down and tap "Add to Home Screen"</li>
+              <li>Open the app from your home screen</li>
+              <li>Come back here and tap "Enable" again</li>
+            </ol>
+          </div>
         </div>
 
-        <div class="game-card game-card--coming-soon">
-          <div class="game-card-icon">🎲</div>
-          <h3 class="game-card-title">Game 4</h3>
-          <p class="game-card-desc">Coming soon</p>
+        <!-- Add New Todo Form -->
+        <div class="todo-form">
+          <input 
+            type="text" 
+            id="todo-title-input" 
+            class="todo-input" 
+            placeholder="What do you need to do?"
+            maxlength="200"
+          />
+          <div class="todo-form-row">
+            <div class="todo-form-field">
+              <label for="todo-due-date">Due Date (optional)</label>
+              <input type="datetime-local" id="todo-due-date" class="todo-datetime" />
+            </div>
+            <div class="todo-form-field">
+              <label for="todo-reminder">Reminder (optional)</label>
+              <input type="datetime-local" id="todo-reminder" class="todo-datetime" />
+            </div>
+          </div>
+          <button id="add-todo-btn" class="btn btn--primary todo-add-btn">Add Task</button>
         </div>
 
-        <div class="game-card game-card--coming-soon">
-          <div class="game-card-icon">🎨</div>
-          <h3 class="game-card-title">Game 5</h3>
-          <p class="game-card-desc">Coming soon</p>
-        </div>
+        <div id="todo-message" class="todo-message"></div>
 
-        <div class="game-card game-card--coming-soon">
-          <div class="game-card-icon">🎪</div>
-          <h3 class="game-card-title">Game 6</h3>
-          <p class="game-card-desc">Coming soon</p>
-        </div>
-
-        <div class="game-card game-card--coming-soon">
-          <div class="game-card-icon">🎭</div>
-          <h3 class="game-card-title">Game 7</h3>
-          <p class="game-card-desc">Coming soon</p>
-        </div>
-
-        <div class="game-card game-card--coming-soon">
-          <div class="game-card-icon">🎪</div>
-          <h3 class="game-card-title">Game 8</h3>
-          <p class="game-card-desc">Coming soon</p>
-        </div>
-
-        <div class="game-card game-card--coming-soon">
-          <div class="game-card-icon">🎬</div>
-          <h3 class="game-card-title">Game 9</h3>
-          <p class="game-card-desc">Coming soon</p>
-        </div>
-
-        <div class="game-card game-card--coming-soon">
-          <div class="game-card-icon">🎵</div>
-          <h3 class="game-card-title">Game 10</h3>
-          <p class="game-card-desc">Coming soon</p>
+        <!-- Todo List -->
+        <div class="todo-list-section">
+          <h2 class="todo-list-title">Tasks</h2>
+          <div id="todo-list" class="todo-list">
+            <p class="todo-loading">Loading...</p>
+          </div>
         </div>
       </div>
     </main>
+
+    <script src="/js/todo.js"></script>
     <script>
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js')

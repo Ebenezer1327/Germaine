@@ -1,6 +1,7 @@
 const { requireAuth } = require('../middleware/auth');
 const journalController = require('../controllers/journalController');
 const folderController = require('../controllers/folderController');
+const todoController = require('../controllers/todoController');
 
 function setupApiRoutes(app, pool) {
   // Journal API routes
@@ -31,6 +32,36 @@ function setupApiRoutes(app, pool) {
 
   app.delete('/api/folders/:id', requireAuth, (req, res) => {
     folderController.deleteFolder(req, res, pool);
+  });
+
+  // Todo API routes
+  app.get('/api/todos', requireAuth, (req, res) => {
+    todoController.getTodos(req, res, pool);
+  });
+
+  app.post('/api/todos', requireAuth, (req, res) => {
+    todoController.createTodo(req, res, pool);
+  });
+
+  app.put('/api/todos/:id', requireAuth, (req, res) => {
+    todoController.updateTodo(req, res, pool);
+  });
+
+  app.delete('/api/todos/:id', requireAuth, (req, res) => {
+    todoController.deleteTodo(req, res, pool);
+  });
+
+  // Push notification API routes
+  app.get('/api/push/vapid-public-key', requireAuth, (req, res) => {
+    todoController.getVapidPublicKey(req, res);
+  });
+
+  app.post('/api/push/subscribe', requireAuth, (req, res) => {
+    todoController.savePushSubscription(req, res, pool);
+  });
+
+  app.delete('/api/push/subscribe', requireAuth, (req, res) => {
+    todoController.deletePushSubscription(req, res, pool);
   });
 }
 

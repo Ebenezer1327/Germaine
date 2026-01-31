@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Journal · Germaine & Snowy</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -11,6 +11,13 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/style.css" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#ff9ec9" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Germaine" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
   </head>
   <body>
     <div class="background-decoration background-decoration--left"></div>
@@ -21,12 +28,17 @@
         <span class="nav-logo"></span>
         <span class="nav-title">Germaine.</span>
       </div>
-      <div class="nav-right">
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span class="nav-toggle-icon"></span>
+      </button>
+      <div class="nav-right" id="nav-menu">
         <a href="/home" class="nav-link">Home</a>
         <a href="/countdown" class="nav-link">Countdown</a>
         <a href="/mystery" class="nav-link">Mystery box</a>
+        <a href="/todo" class="nav-link">To-Do</a>
         <a href="/logout" class="nav-link nav-link--logout">Log out</a>
       </div>
+      <div class="nav-overlay" id="nav-overlay"></div>
     </nav>
 
     <main class="container journal-container">
@@ -95,5 +107,33 @@
     </div>
 
     <script src="/js/journal.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('SW registered:', reg.scope))
+          .catch(err => console.log('SW registration failed:', err));
+      }
+      
+      // Mobile nav toggle
+      const navToggle = document.getElementById('nav-toggle');
+      const navMenu = document.getElementById('nav-menu');
+      const navOverlay = document.getElementById('nav-overlay');
+      
+      if (navToggle && navMenu && navOverlay) {
+        navToggle.addEventListener('click', () => {
+          navToggle.classList.toggle('active');
+          navMenu.classList.toggle('open');
+          navOverlay.classList.toggle('show');
+          document.body.style.overflow = navMenu.classList.contains('open') ? 'hidden' : '';
+        });
+        
+        navOverlay.addEventListener('click', () => {
+          navToggle.classList.remove('active');
+          navMenu.classList.remove('open');
+          navOverlay.classList.remove('show');
+          document.body.style.overflow = '';
+        });
+      }
+    </script>
   </body>
 </html>
