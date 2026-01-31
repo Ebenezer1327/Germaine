@@ -103,8 +103,8 @@ async function initDb(pool) {
         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
         title TEXT NOT NULL,
         description TEXT,
-        due_date TIMESTAMP,
-        reminder_time TIMESTAMP,
+        due_date TIMESTAMPTZ,
+        reminder_time TIMESTAMPTZ,
         completed BOOLEAN DEFAULT FALSE,
         reminder_sent BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

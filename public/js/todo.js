@@ -127,8 +127,13 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const dueDate = todoDueDate.value || null;
-    const reminderTime = todoReminder.value || null;
+    // Convert to ISO UTC so timezone is preserved correctly
+    const dueDate = todoDueDate.value
+      ? new Date(todoDueDate.value).toISOString()
+      : null;
+    const reminderTime = todoReminder.value
+      ? new Date(todoReminder.value).toISOString()
+      : null;
 
     try {
       addTodoBtn.disabled = true;
@@ -199,7 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Delete todo
   async function handleDeleteTodo(e) {
-    const todoId = e.target.dataset.id;
+    const todoId = e.currentTarget.dataset.id;
     if (!confirm('Delete this task?')) return;
 
     try {
@@ -208,6 +213,10 @@ document.addEventListener('DOMContentLoaded', () => {
         credentials: 'include'
       });
 
+      if (response.status === 401) {
+        window.location.href = '/login';
+        return;
+      }
       if (!response.ok) throw new Error('Failed to delete todo');
 
       todos = todos.filter(t => t.id != todoId);
@@ -221,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Edit todo (simple inline edit)
   function handleEditTodo(e) {
-    const todoId = e.target.dataset.id;
+    const todoId = e.currentTarget.dataset.id;
     const todoItem = document.querySelector(`.todo-item[data-id="${todoId}"]`);
     const todo = todos.find(t => t.id == todoId);
     if (!todoItem || !todo) return;
