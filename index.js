@@ -1,4 +1,5 @@
 require('dotenv').config();
+const path = require('path');
 const express = require('express');
 const session = require('express-session');
 const { Pool } = require('pg');
@@ -10,6 +11,11 @@ const { initializePush, checkAndSendReminders } = require('./services/pushServic
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Serve favicon so browser doesn't 404 on /favicon.ico
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'icons', 'icon-192.png'));
+});
 
 // Session configuration
 app.use(session({

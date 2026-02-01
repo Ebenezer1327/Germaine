@@ -119,6 +119,32 @@ async function initDb(pool) {
       console.log('Todo migration skipped:', migErr.message);
     }
 
+    // Create journey_entries table (one entry per user per date: text + media)
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS journey_entries (
+        id SERIAL PRIMARY KEY,
+        username TEXT NOT NULL,
+        entry_date DATE NOT NULL,
+        content TEXT DEFAULT '',
+        images JSONB DEFAULT '[]'::jsonb,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(username, entry_date)
+      );
+    `);
+    console.log('Ensured journey_entries table exists');
+
+    // Chat voice: how the user wants the AI to reply as them
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS user_chat_voice (
+        username TEXT PRIMARY KEY,
+        voice_instructions TEXT DEFAULT '',
+        sample_messages JSONB DEFAULT '[]'::jsonb,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log('Ensured user_chat_voice table exists');
+
     // Create push_subscriptions table if it doesn't exist
     await pool.query(`
       CREATE TABLE IF NOT EXISTS push_subscriptions (

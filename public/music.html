@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Music · Germaine & Snowy</title>
+    <link rel="icon" href="/icons/icon-192.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#ff9ec9" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Germaine" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+  </head>
+  <body>
+    <div class="background-decoration background-decoration--left"></div>
+    <div class="background-decoration background-decoration--right"></div>
+
+    <nav class="nav">
+      <div class="nav-left">
+        <span class="nav-logo"></span>
+        <span class="nav-title">Germaine.</span>
+      </div>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span class="nav-toggle-icon"></span>
+      </button>
+      <div class="nav-right" id="nav-menu">
+        <a href="/home" class="nav-link">Home</a>
+        <a href="/countdown" class="nav-link">Countdown</a>
+        <a href="/mystery" class="nav-link">Mystery box</a>
+        <a href="/logout" class="nav-link nav-link--logout">Log out</a>
+      </div>
+      <div class="nav-overlay" id="nav-overlay"></div>
+    </nav>
+
+    <main class="container music-container">
+      <div class="music-card">
+        <h1 class="music-page-title">For Germaine</h1>
+        <p class="music-page-subtitle">Tap a cube to play – audio only, no video shown</p>
+        <div class="music-mv-grid" id="musicMvGrid"></div>
+        <div class="music-player-section" id="musicPlayerSection">
+          <div class="music-player-wrap" id="musicPlayerWrap">
+            <iframe id="musicYoutubeEmbed" class="music-youtube-embed" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="YouTube MV"></iframe>
+          </div>
+          <p class="music-player-hint" id="musicPlayerHint">Click a cube above to play</p>
+          <p class="music-player-note">Audio only – the video is hidden and does not show.</p>
+          <button type="button" class="music-stop-btn" id="musicStopBtn" style="display: none;">Stop</button>
+        </div>
+        <div class="music-spotify-section" id="musicSpotifySection">
+          <h2 class="music-spotify-heading">Full songs with Spotify (Premium)</h2>
+          <div class="music-spotify-connect" id="musicSpotifyConnect">
+            <p class="music-spotify-connect-text">Connect your Spotify account to play the full playlist here.</p>
+            <a href="/music/spotify-login" class="music-spotify-btn" id="musicSpotifyLoginBtn">Connect Spotify</a>
+          </div>
+          <div class="music-spotify-player" id="musicSpotifyPlayer" style="display: none;">
+            <p class="music-spotify-now" id="musicSpotifyNow">Ready – tap Play to start</p>
+            <div class="music-spotify-controls">
+              <button type="button" class="music-spotify-ctrl" id="musicSpotifyPlayBtn" title="Play playlist">Play</button>
+              <button type="button" class="music-spotify-ctrl" id="musicSpotifyPauseBtn" style="display: none;" title="Pause">Pause</button>
+              <button type="button" class="music-spotify-ctrl music-spotify-ctrl--disconnect" id="musicSpotifyDisconnectBtn">Disconnect</button>
+            </div>
+          </div>
+        </div>
+        <a href="https://open.spotify.com/playlist/4rz8mtsaaO1UaLPjdeJrhU" target="_blank" rel="noopener noreferrer" class="music-open-link">Open playlist in Spotify</a>
+      </div>
+    </main>
+
+    <div id="chat-panel" class="chat-panel">
+      <div class="chat-panel-inner">
+        <div class="chat-panel-header">
+          <h2 class="chat-panel-title">Need me?</h2>
+          <button type="button" id="chat-panel-close" class="chat-panel-close" aria-label="Close">&times;</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-input-wrap">
+          <textarea id="chat-input" class="chat-input" placeholder="Say something..." rows="2" maxlength="1000"></textarea>
+          <button type="button" id="chat-send" class="chat-send">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/chat.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(function () {});
+      }
+      var navToggle = document.getElementById('nav-toggle');
+      var navMenu = document.getElementById('nav-menu');
+      var navOverlay = document.getElementById('nav-overlay');
+      if (navToggle && navMenu && navOverlay) {
+        navToggle.addEventListener('click', function () {
+          navToggle.classList.toggle('active');
+          navMenu.classList.toggle('open');
+          navOverlay.classList.toggle('show');
+          document.body.style.overflow = navMenu.classList.contains('open') ? 'hidden' : '';
+        });
+        navOverlay.addEventListener('click', function () {
+          navToggle.classList.remove('active');
+          navMenu.classList.remove('open');
+          navOverlay.classList.remove('show');
+          document.body.style.overflow = '';
+        });
+      }
+      // MV list: add your YouTube video IDs (from the URL ?v=VIDEO_ID) and titles
+      var mvList = [
+        { id: 'dQw4w9WgXcQ', title: 'Song 1' },
+        { id: '9bZkp7q19f0', title: 'Song 2' },
+        { id: 'kJQP7kiw5Fk', title: 'Song 3' },
+        { id: 'RgKAFK5djSk', title: 'Song 4' }
+      ];
+      var grid = document.getElementById('musicMvGrid');
+      var embed = document.getElementById('musicYoutubeEmbed');
+      var playerSection = document.getElementById('musicPlayerSection');
+      var hint = document.getElementById('musicPlayerHint');
+      var stopBtn = document.getElementById('musicStopBtn');
+      function youtubeThumb(id) {
+        return 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
+      }
+      function playMv(id, title) {
+        embed.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1';
+        if (hint) hint.textContent = 'Now playing: ' + title;
+        if (stopBtn) stopBtn.style.display = 'inline-block';
+        if (playerSection) playerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      function stopMv() {
+        embed.src = '';
+        if (hint) hint.textContent = 'Click a cube above to play';
+        if (stopBtn) stopBtn.style.display = 'none';
+      }
+      if (stopBtn) stopBtn.addEventListener('click', stopMv);
+      if (grid) {
+        mvList.forEach(function (mv) {
+          var cube = document.createElement('button');
+          cube.type = 'button';
+          cube.className = 'music-mv-cube';
+          cube.innerHTML = '<img class="music-mv-cube-img" src="' + youtubeThumb(mv.id) + '" alt="" /><div class="music-mv-cube-overlay"><span class="music-mv-cube-icon">▶</span><span class="music-mv-cube-title">' + mv.title + '</span></div>';
+          cube.addEventListener('click', function () { playMv(mv.id, mv.title); });
+          grid.appendChild(cube);
+        });
+      }
+
+      // Spotify Web Playback SDK (full songs with Premium)
+      var SPOTIFY_PLAYLIST_URI = 'spotify:playlist:4rz8mtsaaO1UaLPjdeJrhU';
+      var spotifyConnect = document.getElementById('musicSpotifyConnect');
+      var spotifyPlayer = document.getElementById('musicSpotifyPlayer');
+      var spotifyNow = document.getElementById('musicSpotifyNow');
+      var spotifyPlayBtn = document.getElementById('musicSpotifyPlayBtn');
+      var spotifyPauseBtn = document.getElementById('musicSpotifyPauseBtn');
+      var spotifyDisconnectBtn = document.getElementById('musicSpotifyDisconnectBtn');
+      var spotifyToken = null;
+      var spotifyDeviceId = null;
+      var spotifyPlayerInstance = null;
+
+      function showSpotifyError() {
+        var params = new URLSearchParams(window.location.search);
+        var err = params.get('spotify_error');
+        if (err && spotifyNow) {
+          spotifyNow.textContent = 'Spotify: ' + (err === 'token_failed' ? 'Could not connect. Try again.' : err);
+          spotifyNow.style.color = 'var(--text-soft)';
+        }
+      }
+
+      function setSpotifyUI(connected) {
+        if (spotifyConnect) spotifyConnect.style.display = connected ? 'none' : 'block';
+        if (spotifyPlayer) spotifyPlayer.style.display = connected ? 'block' : 'none';
+      }
+
+      function setSpotifyPlaying(playing) {
+        if (spotifyPlayBtn) spotifyPlayBtn.style.display = playing ? 'none' : 'inline-block';
+        if (spotifyPauseBtn) spotifyPauseBtn.style.display = playing ? 'inline-block' : 'none';
+      }
+
+      function getSpotifyToken(cb) {
+        if (spotifyToken) return cb(spotifyToken);
+        fetch('/api/spotify/token', { credentials: 'same-origin' })
+          .then(function (r) {
+            if (r.status === 401) return cb(null);
+            return r.json().then(function (d) { spotifyToken = d.accessToken; cb(d.accessToken); });
+          })
+          .catch(function () { cb(null); });
+      }
+
+      function refreshSpotifyToken(cb) {
+        fetch('/api/spotify/refresh', { method: 'POST', credentials: 'same-origin' })
+          .then(function (r) {
+            if (r.status !== 200) return cb(null);
+            return r.json().then(function (d) { spotifyToken = d.accessToken; cb(spotifyToken); });
+          })
+          .catch(function () { cb(null); });
+      }
+
+      function startSpotifyPlayback() {
+        if (!spotifyToken || !spotifyDeviceId) return;
+        fetch('https://api.spotify.com/v1/me/player/play?device_id=' + spotifyDeviceId, {
+          method: 'PUT',
+          headers: { 'Authorization': 'Bearer ' + spotifyToken, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ context_uri: SPOTIFY_PLAYLIST_URI })
+        }).then(function (r) {
+          if (r.status === 204) setSpotifyPlaying(true);
+          if (r.status === 401) refreshSpotifyToken(function (t) { if (t) startSpotifyPlayback(); });
+        }).catch(function () {});
+      }
+
+      function pauseSpotifyPlayback() {
+        if (!spotifyToken) return;
+        fetch('https://api.spotify.com/v1/me/player/pause', {
+          method: 'PUT',
+          headers: { 'Authorization': 'Bearer ' + spotifyToken }
+        }).then(function (r) {
+          if (r.status === 204) setSpotifyPlaying(false);
+          if (r.status === 401) refreshSpotifyToken(function () {});
+        }).catch(function () {});
+      }
+
+      function initSpotifySDK(token) {
+        spotifyToken = token;
+        if (window.Spotify && window.Spotify.Player) {
+          doInitSpotifyPlayer();
+          return;
+        }
+        var script = document.createElement('script');
+        script.src = 'https://sdk.scdn.co/spotify-player.js';
+        script.async = true;
+        document.head.appendChild(script);
+        window.onSpotifyWebPlaybackSDKReady = doInitSpotifyPlayer;
+      }
+
+      function doInitSpotifyPlayer() {
+        if (spotifyPlayerInstance) return;
+        var player = new window.Spotify.Player({
+          name: 'Germaine Web Player',
+          getOAuthToken: function (cb) { getSpotifyToken(cb); },
+          volume: 0.7
+        });
+        player.addListener('ready', function (data) {
+          spotifyDeviceId = data.device_id;
+          if (spotifyNow) spotifyNow.textContent = 'Ready – tap Play to start the playlist';
+        });
+        player.addListener('player_state_changed', function (state) {
+          if (!state) return;
+          setSpotifyPlaying(!state.paused);
+          if (state.track_window && state.track_window.current_track && spotifyNow) {
+            var t = state.track_window.current_track;
+            spotifyNow.textContent = t.name + ' – ' + t.artists.map(function (a) { return a.name; }).join(', ');
+          }
+        });
+        player.addListener('authentication_error', function () { setSpotifyUI(false); });
+        player.addListener('account_error', function () { setSpotifyUI(false); });
+        player.connect();
+        spotifyPlayerInstance = player;
+        setSpotifyUI(true);
+      }
+
+      // Only show Spotify section and try to connect if the app is configured
+      fetch('/api/spotify/status', { credentials: 'same-origin' })
+        .then(function (r) { return r.ok ? r.json() : { configured: false }; })
+        .catch(function () { return { configured: false }; })
+        .then(function (data) {
+          var spotifySection = document.getElementById('musicSpotifySection');
+          if (!data.configured && spotifySection) {
+            spotifySection.style.display = 'none';
+            return;
+          }
+          if (spotifySection) spotifySection.style.display = '';
+          getSpotifyToken(function (token) {
+            if (token) {
+              initSpotifySDK(token);
+            } else {
+              setSpotifyUI(false);
+            }
+            showSpotifyError();
+          });
+        });
+
+      if (spotifyPlayBtn) spotifyPlayBtn.addEventListener('click', startSpotifyPlayback);
+      if (spotifyPauseBtn) spotifyPauseBtn.addEventListener('click', pauseSpotifyPlayback);
+      if (spotifyDisconnectBtn) {
+        spotifyDisconnectBtn.addEventListener('click', function () {
+          fetch('/api/spotify/disconnect', { method: 'POST', credentials: 'same-origin' }).then(function () {
+            if (spotifyPlayerInstance) {
+              spotifyPlayerInstance.disconnect();
+              spotifyPlayerInstance = null;
+            }
+            spotifyToken = null;
+            spotifyDeviceId = null;
+            setSpotifyUI(false);
+            if (spotifyNow) spotifyNow.textContent = 'Ready – tap Play to start';
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

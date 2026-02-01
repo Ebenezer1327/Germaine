@@ -35,7 +35,6 @@
         <a href="/home" class="nav-link">Home</a>
         <a href="/countdown" class="nav-link">Countdown</a>
         <a href="/mystery" class="nav-link">Mystery box</a>
-        <a href="/todo" class="nav-link">To-Do</a>
         <a href="/logout" class="nav-link nav-link--logout">Log out</a>
       </div>
       <div class="nav-overlay" id="nav-overlay"></div>
@@ -44,8 +43,11 @@
     <main class="container journal-container">
       <div class="journal-card">
         <div class="journal-header">
-          <h1 class="journal-title">My Journal</h1>
-          <p class="journal-subtitle">Write anything you want here... I WONT SEE!</p>
+          <img src="/images/journal-logo.png" alt="" class="journal-logo" />
+          <div>
+            <h1 class="journal-title">My Journal</h1>
+            <p class="journal-subtitle">Write anything you want here... I WONT SEE!</p>
+          </div>
         </div>
 
         <div class="journal-editor">
@@ -92,13 +94,35 @@
         <div id="journal-message" class="journal-message"></div>
 
         <div class="journal-entries">
-          <h2 class="journal-entries-title">Previous Entries</h2>
+          <div class="journal-entries-header">
+            <h2 class="journal-entries-title">Previous Entries</h2>
+            <div class="journal-view-filter">
+              <label for="view-folder-select" class="journal-view-label">Show:</label>
+              <select id="view-folder-select" class="journal-view-select">
+                <option value="">All folders</option>
+              </select>
+            </div>
+          </div>
           <div id="journal-entries-list" class="journal-entries-list">
             <p class="journal-loading">Loading...</p>
           </div>
         </div>
       </div>
     </main>
+
+    <div id="chat-panel" class="chat-panel">
+      <div class="chat-panel-inner">
+        <div class="chat-panel-header">
+          <h2 class="chat-panel-title">Need me?</h2>
+          <button type="button" id="chat-panel-close" class="chat-panel-close" aria-label="Close">&times;</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-input-wrap">
+          <textarea id="chat-input" class="chat-input" placeholder="Say something..." rows="2" maxlength="1000"></textarea>
+          <button type="button" id="chat-send" class="chat-send">Send</button>
+        </div>
+      </div>
+    </div>
 
     <!-- Image Modal -->
     <div id="image-modal" class="journal-image-modal">
@@ -107,6 +131,7 @@
     </div>
 
     <script src="/js/journal.js"></script>
+    <script src="/js/chat.js"></script>
     <script>
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js')

@@ -20,74 +20,6 @@
     <link rel="apple-touch-icon" href="/icons/icon-192.png" />
   </head>
   <body>
-    <script>
-      // Carousel functionality
-      (function() {
-        const slides = document.querySelectorAll('.carousel-slide');
-        const dots = document.querySelectorAll('.carousel-dot');
-        const prevBtn = document.querySelector('.carousel-btn--prev');
-        const nextBtn = document.querySelector('.carousel-btn--next');
-        let currentSlide = 0;
-        let autoPlayInterval;
-
-        function showSlide(index) {
-          slides.forEach((slide, i) => {
-            slide.classList.toggle('active', i === index);
-          });
-          dots.forEach((dot, i) => {
-            dot.classList.toggle('active', i === index);
-          });
-          currentSlide = index;
-        }
-
-        function nextSlide() {
-          const next = (currentSlide + 1) % slides.length;
-          showSlide(next);
-        }
-
-        function prevSlide() {
-          const prev = (currentSlide - 1 + slides.length) % slides.length;
-          showSlide(prev);
-        }
-
-        function startAutoPlay() {
-          autoPlayInterval = setInterval(nextSlide, 4000);
-        }
-
-        function stopAutoPlay() {
-          clearInterval(autoPlayInterval);
-        }
-
-        // Event listeners
-        nextBtn?.addEventListener('click', () => {
-          nextSlide();
-          stopAutoPlay();
-          startAutoPlay();
-        });
-
-        prevBtn?.addEventListener('click', () => {
-          prevSlide();
-          stopAutoPlay();
-          startAutoPlay();
-        });
-
-        dots.forEach((dot, index) => {
-          dot.addEventListener('click', () => {
-            showSlide(index);
-            stopAutoPlay();
-            startAutoPlay();
-          });
-        });
-
-        // Pause on hover
-        const carouselContainer = document.querySelector('.carousel-container');
-        carouselContainer?.addEventListener('mouseenter', stopAutoPlay);
-        carouselContainer?.addEventListener('mouseleave', startAutoPlay);
-
-        // Start auto-play
-        startAutoPlay();
-      })();
-    </script>
     <div class="background-decoration background-decoration--left"></div>
     <div class="background-decoration background-decoration--right"></div>
 
@@ -103,7 +35,6 @@
         <a href="/home" class="nav-link nav-link--active">Home</a>
         <a href="/countdown" class="nav-link">Countdown</a>
         <a href="/mystery" class="nav-link">Mystery box</a>
-        <a href="/todo" class="nav-link">To-Do</a>
         <a href="/logout" class="nav-link nav-link--logout">Log out</a>
       </div>
       <div class="nav-overlay" id="nav-overlay"></div>
@@ -115,20 +46,20 @@
           <div class="carousel-container">
             <div class="carousel-slides">
               <div class="carousel-slide active">
-                <div class="carousel-image-placeholder">Image 1</div>
+                <img class="carousel-image" src="/images/carousel/carousel-1.png" alt="Germaine" />
                 <div class="carousel-overlay"></div>
               </div>
               <div class="carousel-slide">
-                <div class="carousel-image-placeholder">Image 2</div>
+                <img class="carousel-image" src="/images/carousel/carousel-2.png" alt="Germaine" />
                 <div class="carousel-overlay"></div>
               </div>
               <div class="carousel-slide">
-                <div class="carousel-image-placeholder">Image 3</div>
+                <img class="carousel-image" src="/images/carousel/carousel-3.png" alt="Germaine" />
                 <div class="carousel-overlay"></div>
               </div>
             </div>
-            <button class="carousel-btn carousel-btn--prev" aria-label="Previous slide">‹</button>
-            <button class="carousel-btn carousel-btn--next" aria-label="Next slide">›</button>
+            <button type="button" class="carousel-btn carousel-btn--prev" aria-label="Previous slide">‹</button>
+            <button type="button" class="carousel-btn carousel-btn--next" aria-label="Next slide">›</button>
             <div class="carousel-dots">
               <span class="carousel-dot active" data-slide="0"></span>
               <span class="carousel-dot" data-slide="1"></span>
@@ -138,34 +69,120 @@
         </div>
         <a href="/games" class="bento-item bento-item--game">
           <div class="bento-content">
-            <div class="bento-game-icon">🎮</div>
+            <img src="/images/game-icon.png" alt="" class="bento-game-icon bento-game-icon--img" />
             <h3 class="bento-title">Mini Games</h3>
             <p class="bento-text">Play Games</p>
           </div>
         </a>
-        <a href="/todo" class="bento-item bento-item--todo">
+        <a href="/todo" class="bento-item bento-item--journal">
           <div class="bento-content">
-            <div class="bento-todo-icon">✓</div>
+            <img src="/images/todo-logo.png" alt="" class="bento-todo-icon bento-todo-icon--img" />
             <h3 class="bento-title">To-Do List</h3>
             <p class="bento-text">Track your tasks</p>
           </div>
         </a>
-        <div class="bento-item bento-item--tall">
-          <div class="bento-content">
-            <h3 class="bento-title">Card 4</h3>
-            <p class="bento-text">Add your content here</p>
-          </div>
-        </div>
         <a href="/journal" class="bento-item bento-item--journal">
           <div class="bento-content">
-            <div class="bento-journal-icon">💕</div>
+            <img src="/images/journal-logo.png" alt="" class="bento-journal-icon bento-journal-icon--img" />
             <h3 class="bento-title">My Journal</h3>
             <p class="bento-text">Write your thoughts</p>
           </div>
         </a>
+        <button type="button" class="bento-item bento-item--ai" id="nav-mascot" aria-label="Chat – Need me?">
+          <div class="bento-content">
+            <img src="/images/ai-logo.png" alt="" class="bento-ai-icon" />
+            <div class="Ai-content">
+            <h3 class="bento-title">Need me?</h3>
+            <p class="bento-text">Chat with Ebumzer</p>
+            </div>
+          </div>
+        </button>
       </div>
     </main>
+
+    <!-- Chat panel (opens when mascot clicked) -->
+    <div id="chat-panel" class="chat-panel">
+      <div class="chat-panel-inner">
+        <div class="chat-panel-header">
+          <h2 class="chat-panel-title">Need me?</h2>
+          <button type="button" id="chat-panel-close" class="chat-panel-close" aria-label="Close">&times;</button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-input-wrap">
+          <textarea id="chat-input" class="chat-input" placeholder="Say something..." rows="2" maxlength="1000"></textarea>
+          <button type="button" id="chat-send" class="chat-send">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/chat.js"></script>
     <script>
+      // Carousel functionality (runs after DOM is ready)
+      (function() {
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.carousel-dot');
+        const prevBtn = document.querySelector('.carousel-btn--prev');
+        const nextBtn = document.querySelector('.carousel-btn--next');
+        if (!slides.length || !prevBtn || !nextBtn) return;
+        let currentSlide = 0;
+        let autoPlayInterval;
+
+        function showSlide(index) {
+          currentSlide = (index + slides.length) % slides.length;
+          slides.forEach(function(slide, i) {
+            slide.classList.toggle('active', i === currentSlide);
+          });
+          dots.forEach(function(dot, i) {
+            dot.classList.toggle('active', i === currentSlide);
+          });
+        }
+
+        function nextSlide() {
+          showSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+          showSlide(currentSlide - 1);
+        }
+
+        function startAutoPlay() {
+          autoPlayInterval = setInterval(nextSlide, 7000);
+        }
+
+        function stopAutoPlay() {
+          clearInterval(autoPlayInterval);
+        }
+
+        prevBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          prevSlide();
+          stopAutoPlay();
+          startAutoPlay();
+        });
+
+        nextBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          nextSlide();
+          stopAutoPlay();
+          startAutoPlay();
+        });
+
+        dots.forEach(function(dot, index) {
+          dot.addEventListener('click', function() {
+            showSlide(index);
+            stopAutoPlay();
+            startAutoPlay();
+          });
+        });
+
+        var carouselContainer = document.querySelector('.carousel-container');
+        if (carouselContainer) {
+          carouselContainer.addEventListener('mouseenter', stopAutoPlay);
+          carouselContainer.addEventListener('mouseleave', startAutoPlay);
+        }
+
+        startAutoPlay();
+      })();
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js')
           .then(reg => console.log('SW registered:', reg.scope))

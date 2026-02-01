@@ -2,6 +2,9 @@ const { requireAuth } = require('../middleware/auth');
 const journalController = require('../controllers/journalController');
 const folderController = require('../controllers/folderController');
 const todoController = require('../controllers/todoController');
+const spotifyController = require('../controllers/spotifyController');
+const journeyController = require('../controllers/journeyController');
+const chatController = require('../controllers/chatController');
 
 function setupApiRoutes(app, pool) {
   // Journal API routes
@@ -62,6 +65,42 @@ function setupApiRoutes(app, pool) {
 
   app.delete('/api/push/subscribe', requireAuth, (req, res) => {
     todoController.deletePushSubscription(req, res, pool);
+  });
+
+  app.get('/api/spotify/status', requireAuth, (req, res) => {
+    spotifyController.status(req, res);
+  });
+
+  app.get('/api/spotify/token', requireAuth, (req, res) => {
+    spotifyController.getToken(req, res);
+  });
+
+  app.post('/api/spotify/refresh', requireAuth, (req, res) => {
+    spotifyController.refresh(req, res);
+  });
+
+  app.post('/api/spotify/disconnect', requireAuth, (req, res) => {
+    spotifyController.disconnect(req, res);
+  });
+
+  app.get('/api/journey', requireAuth, (req, res) => {
+    journeyController.getMonth(req, res, pool);
+  });
+
+  app.post('/api/journey', requireAuth, (req, res) => {
+    journeyController.upsert(req, res, pool);
+  });
+
+  app.get('/api/chat/voice', requireAuth, (req, res) => {
+    chatController.getVoice(req, res, pool);
+  });
+
+  app.post('/api/chat/voice', requireAuth, (req, res) => {
+    chatController.saveVoice(req, res, pool);
+  });
+
+  app.post('/api/chat', requireAuth, (req, res) => {
+    chatController.chat(req, res, pool);
   });
 }
 

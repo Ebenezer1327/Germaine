@@ -44,25 +44,39 @@ async function getJournalEntries(req, res, pool) {
 }
 
 async function createJournalEntry(req, res, pool) {
-  const { content, images } = req.body;
+  const { content, images, folder_id: rawFolderId } = req.body;
 
   if (!content || content.trim().length === 0) {
     return res.status(400).json({ error: 'Content is required' });
   }
 
+  const folderId = (rawFolderId != null && rawFolderId !== '') ? parseInt(rawFolderId, 10) : null;
+  const folder_id = (Number.isInteger(folderId) && folderId > 0) ? folderId : null;
+
   try {
+    if (folder_id != null) {
+      const folderCheck = await pool.query(
+        'SELECT id FROM journal_folders WHERE id = $1 AND username = $2',
+        [folder_id, req.session.username]
+      );
+      if (folderCheck.rowCount === 0) {
+        return res.status(403).json({ error: 'Invalid folder' });
+      }
+    }
+
     const imagesArray = images && Array.isArray(images) ? images : [];
     const result = await pool.query(
-      'INSERT INTO journal_entries (username, content, images) VALUES ($1, $2, $3::jsonb) RETURNING id, created_at',
-      [req.session.username, content.trim(), JSON.stringify(imagesArray)]
+      'INSERT INTO journal_entries (username, content, images, folder_id) VALUES ($1, $2, $3::jsonb, $4) RETURNING id, created_at, folder_id',
+      [req.session.username, content.trim(), JSON.stringify(imagesArray), folder_id]
     );
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       entry: {
         id: result.rows[0].id,
         content: content.trim(),
         images: imagesArray,
-        created_at: result.rows[0].created_at
+        created_at: result.rows[0].created_at,
+        folder_id: result.rows[0].folder_id
       }
     });
   } catch (err) {

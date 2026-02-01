@@ -41,64 +41,37 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch event - network first for HTML, cache first for assets
+// Fetch event - network first for HTML and assets (so normal refresh shows updates)
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') return;
+  if (event.request.method !== 'GET') return;
+  if (url.pathname.startsWith('/api/')) return;
   
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') {
-    return;
-  }
-  
-  // Skip API requests - always go to network
-  if (url.pathname.startsWith('/api/')) {
-    return;
-  }
-  
-  // For navigation requests (HTML pages), use network-first strategy
-  // This avoids caching redirected responses from auth
+  // For navigation (HTML): always fetch from network, never use cache
+  // So normal refresh shows latest HTML without hard refresh
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request)
-        .catch(() => {
-          // Could return an offline page here if needed
-          return caches.match('/');
-        })
+      fetch(event.request, { cache: 'no-store' })
+        .catch(() => caches.match('/'))
     );
     return;
   }
   
-  // For static assets, use cache-first strategy
+  // For static assets: network-first so updates show on normal refresh
+  // (cache-only when offline)
   event.respondWith(
-    caches.match(event.request)
-      .then((cachedResponse) => {
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-        
-        return fetch(event.request).then((response) => {
-          // Don't cache if not a valid response
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
-          }
-          
-          // Don't cache redirected responses
-          if (response.redirected) {
-            return response;
-          }
-          
-          // Clone and cache the response
-          const responseToCache = response.clone();
+    fetch(event.request, { cache: 'no-store' })
+      .then((response) => {
+        if (response && response.status === 200 && response.type === 'basic' && !response.redirected) {
+          const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
+            cache.put(event.request, clone);
           });
-          
-          return response;
-        });
+        }
+        return response;
       })
-      .catch(() => {
-        // Offline fallback for assets could go here
-      })
+      .catch(() => caches.match(event.request))
   );
 });
 

@@ -3,6 +3,8 @@
 let currentImages = [];
 let currentFolderId = null;
 let folders = [];
+let allEntries = [];
+let viewFolderId = null;
 
 // Wait for DOM to be ready
 document.addEventListener('DOMContentLoaded', () => {
@@ -24,9 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
     e.target.value = '';
   });
 
-  // Folder selector
+  // Folder selector (for new entries)
   document.getElementById('folder-select').addEventListener('change', (e) => {
     currentFolderId = e.target.value ? parseInt(e.target.value) : null;
+  });
+
+  // View filter: show only one folder's entries
+  document.getElementById('view-folder-select').addEventListener('change', (e) => {
+    viewFolderId = e.target.value ? parseInt(e.target.value) : null;
+    applyViewFilter();
   });
 
   // Create folder button
@@ -163,11 +171,8 @@ async function loadEntries() {
       throw new Error(`Failed to load entries: ${response.status}`);
     }
     const data = await response.json();
-    if (data.entries) {
-      displayEntries(data.entries);
-    } else {
-      displayEntries([]);
-    }
+    allEntries = data.entries || [];
+    applyViewFilter();
   } catch (error) {
     console.error('Error loading entries:', error);
     const list = document.getElementById('journal-entries-list');
@@ -210,6 +215,27 @@ function updateFolderSelector() {
   if (currentValue) {
     select.value = currentValue;
   }
+
+  // Update "Show" dropdown so you can view by folder
+  const viewSelect = document.getElementById('view-folder-select');
+  if (viewSelect) {
+    const viewValue = viewSelect.value;
+    viewSelect.innerHTML = '<option value="">All folders</option>';
+    folders.forEach(folder => {
+      const option = document.createElement('option');
+      option.value = folder.id;
+      option.textContent = folder.folder_name;
+      viewSelect.appendChild(option);
+    });
+    if (viewValue) viewSelect.value = viewValue;
+  }
+}
+
+function applyViewFilter() {
+  const toShow = viewFolderId
+    ? allEntries.filter(e => e.folder_id === viewFolderId)
+    : allEntries;
+  displayEntries(toShow);
 }
 
 function showFolderModal() {
@@ -468,14 +494,24 @@ async function saveEntry() {
   try {
     // Save images as simple array of strings (base64 data URLs)
     const images = currentImages.map(src => src);
-    const folderId = folderSelect.value ? parseInt(folderSelect.value) : null;
-    
+    const folderSelectEl = document.getElementById('folder-select');
+    const folderId = (folderSelectEl && folderSelectEl.value && folderSelectEl.value.trim() !== '')
+      ? parseInt(folderSelectEl.value, 10)
+      : null;
+
+    const payload = { content, images };
+    if (folderId != null && !isNaN(folderId) && folderId > 0) {
+      payload.folder_id = folderId;
+    } else {
+      payload.folder_id = null;
+    }
+
     const response = await fetch('/api/journal', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ content, images, folder_id: folderId }),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
