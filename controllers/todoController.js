@@ -29,7 +29,13 @@ async function getTodos(req, res, pool) {
       [userId]
     );
     
-    res.json(result.rows);
+    const todos = result.rows.map(row => ({
+      ...row,
+      due_date: row.due_date ? new Date(row.due_date).toISOString() : null,
+      reminder_time: row.reminder_time ? new Date(row.reminder_time).toISOString() : null,
+      created_at: row.created_at ? new Date(row.created_at).toISOString() : null
+    }));
+    res.json(todos);
   } catch (err) {
     console.error('Error fetching todos:', err);
     res.status(500).json({ error: 'Failed to fetch todos' });
@@ -65,7 +71,14 @@ async function createTodo(req, res, pool) {
       [userId, title.trim(), description || null, due_date || null, reminder_time || null]
     );
     
-    res.status(201).json(result.rows[0]);
+    const todo = result.rows[0];
+    const response = {
+      ...todo,
+      due_date: todo.due_date ? new Date(todo.due_date).toISOString() : null,
+      reminder_time: todo.reminder_time ? new Date(todo.reminder_time).toISOString() : null,
+      created_at: todo.created_at ? new Date(todo.created_at).toISOString() : null
+    };
+    res.status(201).json(response);
   } catch (err) {
     console.error('Error creating todo:', err);
     res.status(500).json({ error: 'Failed to create todo' });
@@ -143,7 +156,14 @@ async function updateTodo(req, res, pool) {
       values
     );
     
-    res.json(result.rows[0]);
+    const todo = result.rows[0];
+    const response = {
+      ...todo,
+      due_date: todo.due_date ? new Date(todo.due_date).toISOString() : null,
+      reminder_time: todo.reminder_time ? new Date(todo.reminder_time).toISOString() : null,
+      created_at: todo.created_at ? new Date(todo.created_at).toISOString() : null
+    };
+    res.json(response);
   } catch (err) {
     console.error('Error updating todo:', err);
     res.status(500).json({ error: 'Failed to update todo' });

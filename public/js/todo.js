@@ -127,13 +127,16 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Convert to ISO UTC so timezone is preserved correctly
-    const dueDate = todoDueDate.value
-      ? new Date(todoDueDate.value).toISOString()
-      : null;
-    const reminderTime = todoReminder.value
-      ? new Date(todoReminder.value).toISOString()
-      : null;
+    // Parse datetime-local as LOCAL time (Safari can misinterpret string as UTC)
+    const parseLocalDateTime = (value) => {
+      if (!value) return null;
+      const [datePart, timePart] = value.split('T');
+      const [y, m, d] = datePart.split('-').map(Number);
+      const [hh, mm] = (timePart || '00:00').split(':').map(Number);
+      return new Date(y, m - 1, d, hh, mm, 0, 0).toISOString();
+    };
+    const dueDate = parseLocalDateTime(todoDueDate.value);
+    const reminderTime = parseLocalDateTime(todoReminder.value);
 
     try {
       addTodoBtn.disabled = true;
