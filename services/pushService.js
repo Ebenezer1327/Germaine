@@ -97,25 +97,41 @@ async function sendNotificationToUser(pool, userId, payload) {
   }
 }
 
+// Parse raw reminder_time "2025-02-05T14:07" + timezone_offset to UTC Date
+function parseReminderToUTC(reminderTime, timezoneOffset) {
+  if (!reminderTime) return null;
+  const m = String(reminderTime).match(/^(\d{4})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})/);
+  if (!m) return null;
+  const [, y, mo, d, hh, mm] = m.map(Number);
+  const offsetMin = timezoneOffset ?? 0;
+  const utcMs = Date.UTC(y, mo - 1, d, hh, mm, 0, 0) + offsetMin * 60 * 1000;
+  return new Date(utcMs);
+}
+
 // Check for due reminders and send notifications
 async function checkAndSendReminders(pool) {
   try {
-    // Find todos with reminder_time that has passed and reminder not yet sent
     const result = await pool.query(`
-      SELECT t.id, t.title, t.description, t.due_date, t.user_id
+      SELECT t.id, t.title, t.reminder_time, t.timezone_offset, t.user_id
       FROM todos t
-      WHERE t.reminder_time <= NOW()
+      WHERE t.reminder_time IS NOT NULL
         AND t.reminder_sent = FALSE
         AND t.completed = FALSE
     `);
 
-    if (result.rows.length === 0) {
+    const now = Date.now();
+    const dueTodos = result.rows.filter(row => {
+      const utcDate = parseReminderToUTC(row.reminder_time, row.timezone_offset);
+      return utcDate && utcDate.getTime() <= now;
+    });
+
+    if (dueTodos.length === 0) {
       return { checked: true, reminders: 0 };
     }
 
-    console.log(`Found ${result.rows.length} reminders to send`);
+    console.log(`Found ${dueTodos.length} reminders to send`);
 
-    for (const todo of result.rows) {
+    for (const todo of dueTodos) {
       const payload = {
         title: 'Task Reminder',
         body: todo.title,

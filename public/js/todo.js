@@ -94,9 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function createTodoHTML(todo) {
-    const dueDate = todo.due_date ? new Date(todo.due_date) : null;
-    const reminderTime = todo.reminder_time ? new Date(todo.reminder_time) : null;
-    const isOverdue = dueDate && !todo.completed && dueDate < new Date();
+    const dueDate = todo.due_date ? parseDisplayDate(todo.due_date) : null;
+    const reminderTime = todo.reminder_time ? parseDisplayDate(todo.reminder_time) : null;
+    const dueMs = dueDate ? new Date(dueDate.y, dueDate.m - 1, dueDate.d, dueDate.hh, dueDate.mm).getTime() : 0;
+    const isOverdue = dueDate && !todo.completed && dueMs < Date.now();
 
     return `
       <div class="todo-item ${todo.completed ? 'todo-item--completed' : ''} ${isOverdue ? 'todo-item--overdue' : ''}" data-id="${todo.id}">
@@ -107,8 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
           </label>
           <div class="todo-item-content">
             <span class="todo-item-title">${escapeHtml(todo.title)}</span>
-            ${dueDate ? `<span class="todo-item-due ${isOverdue ? 'todo-item-due--overdue' : ''}">📅 ${formatDate(dueDate)}</span>` : ''}
-            ${reminderTime ? `<span class="todo-item-reminder">🔔 ${formatDate(reminderTime)}</span>` : ''}
+            ${dueDate ? `<span class="todo-item-due ${isOverdue ? 'todo-item-due--overdue' : ''}">📅 ${formatDisplayDate(dueDate)}</span>` : ''}
+            ${reminderTime ? `<span class="todo-item-reminder">🔔 ${formatDisplayDate(reminderTime)}</span>` : ''}
           </div>
         </div>
         <div class="todo-item-actions">
@@ -127,16 +128,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Parse datetime-local as LOCAL time (Safari can misinterpret string as UTC)
-    const parseLocalDateTime = (value) => {
-      if (!value) return null;
-      const [datePart, timePart] = value.split('T');
-      const [y, m, d] = datePart.split('-').map(Number);
-      const [hh, mm] = (timePart || '00:00').split(':').map(Number);
-      return new Date(y, m - 1, d, hh, mm, 0, 0).toISOString();
-    };
-    const dueDate = parseLocalDateTime(todoDueDate.value);
-    const reminderTime = parseLocalDateTime(todoReminder.value);
+    // Store raw value - PWA/standalone can use UTC for display, causing wrong times
+    const dueDate = todoDueDate.value || null;
+    const reminderTime = todoReminder.value || null;
+    const timezoneOffset = new Date().getTimezoneOffset();
 
     try {
       addTodoBtn.disabled = true;
@@ -149,7 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify({
           title,
           due_date: dueDate,
-          reminder_time: reminderTime
+          reminder_time: reminderTime,
+          timezone_offset: timezoneOffset
         })
       });
 
@@ -400,30 +396,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 3000);
   }
 
-  function formatDate(date) {
+  function parseDisplayDate(value) {
+    if (!value) return null;
+    const s = String(value);
+    const isoMatch = s.match(/^(\d{4})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})/);
+    if (isoMatch) {
+      return { y: +isoMatch[1], m: +isoMatch[2], d: +isoMatch[3], hh: +isoMatch[4], mm: +isoMatch[5] };
+    }
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return null;
+    return { y: d.getFullYear(), m: d.getMonth() + 1, d: d.getDate(), hh: d.getHours(), mm: d.getMinutes() };
+  }
+
+  function formatDisplayDate(parsed) {
+    if (!parsed) return '';
     const now = new Date();
+    const today = now.getFullYear() === parsed.y && now.getMonth()+1 === parsed.m && now.getDate() === parsed.d;
     const tomorrow = new Date(now);
     tomorrow.setDate(tomorrow.getDate() + 1);
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const isTomorrow = tomorrow.getFullYear() === parsed.y && tomorrow.getMonth()+1 === parsed.m && tomorrow.getDate() === parsed.d;
+    const isYesterday = yesterday.getFullYear() === parsed.y && yesterday.getMonth()+1 === parsed.m && yesterday.getDate() === parsed.d;
     
-    const isToday = date.toDateString() === now.toDateString();
-    const isTomorrow = date.toDateString() === tomorrow.toDateString();
+    const h = parsed.hh;
+    const m = parsed.mm;
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;
+    const timeStr = `${h12}:${String(m).padStart(2,'0')} ${ampm}`;
     
-    const timeStr = date.toLocaleTimeString('en-US', { 
-      hour: 'numeric', 
-      minute: '2-digit',
-      hour12: true 
-    });
-    
-    if (isToday) return `Today ${timeStr}`;
+    if (today) return `Today ${timeStr}`;
     if (isTomorrow) return `Tomorrow ${timeStr}`;
+    if (isYesterday) return `Yesterday ${timeStr}`;
     
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    });
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${months[parsed.m-1]} ${parsed.d}, ${timeStr}`;
   }
 
   function escapeHtml(text) {

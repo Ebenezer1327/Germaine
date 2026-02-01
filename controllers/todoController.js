@@ -1,5 +1,23 @@
 // Todo Controller - CRUD operations for to-do items
 
+function formatTodoDateForClient(value, timezoneOffset) {
+  if (!value) return null;
+  const s = String(value);
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})[T\s](\d{2}):(\d{2})/);
+  if (m) return `${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}`;
+  const d = new Date(value);
+  if (isNaN(d.getTime())) return null;
+  const offset = timezoneOffset ?? 0;
+  const localMs = d.getTime() - offset * 60 * 1000;
+  const local = new Date(localMs);
+  const y = local.getUTCFullYear();
+  const mo = String(local.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(local.getUTCDate()).padStart(2, '0');
+  const h = String(local.getUTCHours()).padStart(2, '0');
+  const min = String(local.getUTCMinutes()).padStart(2, '0');
+  return `${y}-${mo}-${day}T${h}:${min}`;
+}
+
 // Get all todos for the logged-in user
 async function getTodos(req, res, pool) {
   try {
@@ -18,7 +36,7 @@ async function getTodos(req, res, pool) {
     const userId = userResult.rows[0].id;
     
     const result = await pool.query(
-      `SELECT id, title, description, due_date, reminder_time, completed, created_at 
+      `SELECT id, title, description, due_date, reminder_time, timezone_offset, completed, created_at 
        FROM todos 
        WHERE user_id = $1 
        ORDER BY 
@@ -31,8 +49,8 @@ async function getTodos(req, res, pool) {
     
     const todos = result.rows.map(row => ({
       ...row,
-      due_date: row.due_date ? new Date(row.due_date).toISOString() : null,
-      reminder_time: row.reminder_time ? new Date(row.reminder_time).toISOString() : null,
+      due_date: formatTodoDateForClient(row.due_date, row.timezone_offset),
+      reminder_time: formatTodoDateForClient(row.reminder_time, row.timezone_offset),
       created_at: row.created_at ? new Date(row.created_at).toISOString() : null
     }));
     res.json(todos);
@@ -46,7 +64,7 @@ async function getTodos(req, res, pool) {
 async function createTodo(req, res, pool) {
   try {
     const username = req.session.username;
-    const { title, description, due_date, reminder_time } = req.body;
+    const { title, description, due_date, reminder_time, timezone_offset } = req.body;
     
     if (!title || title.trim() === '') {
       return res.status(400).json({ error: 'Title is required' });
@@ -65,17 +83,17 @@ async function createTodo(req, res, pool) {
     const userId = userResult.rows[0].id;
     
     const result = await pool.query(
-      `INSERT INTO todos (user_id, title, description, due_date, reminder_time)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, title, description, due_date, reminder_time, completed, created_at`,
-      [userId, title.trim(), description || null, due_date || null, reminder_time || null]
+      `INSERT INTO todos (user_id, title, description, due_date, reminder_time, timezone_offset)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       RETURNING id, title, description, due_date, reminder_time, timezone_offset, completed, created_at`,
+      [userId, title.trim(), description || null, due_date || null, reminder_time || null, timezone_offset ?? null]
     );
     
     const todo = result.rows[0];
     const response = {
       ...todo,
-      due_date: todo.due_date ? new Date(todo.due_date).toISOString() : null,
-      reminder_time: todo.reminder_time ? new Date(todo.reminder_time).toISOString() : null,
+      due_date: formatTodoDateForClient(todo.due_date, todo.timezone_offset),
+      reminder_time: formatTodoDateForClient(todo.reminder_time, todo.timezone_offset),
       created_at: todo.created_at ? new Date(todo.created_at).toISOString() : null
     };
     res.status(201).json(response);
@@ -90,7 +108,7 @@ async function updateTodo(req, res, pool) {
   try {
     const username = req.session.username;
     const todoId = req.params.id;
-    const { title, description, due_date, reminder_time, completed } = req.body;
+    const { title, description, due_date, reminder_time, timezone_offset, completed } = req.body;
     
     // Get user ID
     const userResult = await pool.query(
@@ -134,8 +152,11 @@ async function updateTodo(req, res, pool) {
     if (reminder_time !== undefined) {
       updates.push(`reminder_time = $${paramCount++}`);
       values.push(reminder_time);
-      // Reset reminder_sent if reminder_time is updated
       updates.push(`reminder_sent = FALSE`);
+    }
+    if (timezone_offset !== undefined) {
+      updates.push(`timezone_offset = $${paramCount++}`);
+      values.push(timezone_offset);
     }
     if (completed !== undefined) {
       updates.push(`completed = $${paramCount++}`);
@@ -152,15 +173,15 @@ async function updateTodo(req, res, pool) {
       `UPDATE todos 
        SET ${updates.join(', ')}
        WHERE id = $${paramCount++} AND user_id = $${paramCount}
-       RETURNING id, title, description, due_date, reminder_time, completed, created_at`,
+       RETURNING id, title, description, due_date, reminder_time, timezone_offset, completed, created_at`,
       values
     );
     
     const todo = result.rows[0];
     const response = {
       ...todo,
-      due_date: todo.due_date ? new Date(todo.due_date).toISOString() : null,
-      reminder_time: todo.reminder_time ? new Date(todo.reminder_time).toISOString() : null,
+      due_date: formatTodoDateForClient(todo.due_date, todo.timezone_offset),
+      reminder_time: formatTodoDateForClient(todo.reminder_time, todo.timezone_offset),
       created_at: todo.created_at ? new Date(todo.created_at).toISOString() : null
     };
     res.json(response);

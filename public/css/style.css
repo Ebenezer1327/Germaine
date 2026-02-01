@@ -17,6 +17,7 @@
   padding: 0;
 }
 
+
 body {
   min-height: 100vh;
   font-family: "Quicksand", system-ui, -apple-system, BlinkMacSystemFont,
@@ -771,12 +772,14 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
 }
 
 .auth-field {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  width: 100%;
 }
 
 .auth-field label {
@@ -786,14 +789,18 @@ body {
 }
 
 .auth-field input {
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
   border-radius: 999px;
   border: 1px solid rgba(255, 182, 214, 0.9);
-  padding: 9px 14px;
-  font-size: 0.9rem;
+  padding: 10px 16px;
+  font-size: 0.95rem;
   outline: none;
   background: rgba(255, 255, 255, 0.95);
   color: var(--text-main);
   box-shadow: 0 6px 14px rgba(208, 132, 170, 0.25);
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .auth-field input::placeholder {
@@ -808,6 +815,123 @@ body {
 .auth-submit {
   width: 100%;
   margin-top: 6px;
+}
+
+.auth-error {
+  background: rgba(255, 214, 214, 0.9);
+  color: #8b2d2d;
+  border: 2px solid #ff9e9e;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.password-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 182, 214, 0.9);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 6px 14px rgba(208, 132, 170, 0.25);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.password-wrap:focus-within {
+  border-color: var(--baby-pink-deep);
+  box-shadow: 0 0 0 1px rgba(255, 158, 201, 0.7), 0 8px 20px rgba(208, 132, 170, 0.4);
+}
+
+.password-wrap input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 10px 16px 10px 16px;
+  padding-right: 44px;
+}
+
+.password-wrap input:focus {
+  outline: none;
+  border: none;
+  box-shadow: none;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  color: var(--text-soft);
+  opacity: 0.85;
+  transition: color 0.2s, opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-toggle:hover {
+  color: var(--baby-pink-deep);
+  opacity: 1;
+}
+
+.password-toggle-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center;
+}
+
+.password-toggle-svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.password-toggle[data-eye="open"] .icon-closed {
+  display: none;
+}
+
+.password-toggle[data-eye="closed"] .icon-open {
+  display: none;
+}
+
+.password-toggle.pop .password-toggle-icon-wrap {
+  animation: password-eye-pop 0.35s ease;
+}
+
+@keyframes password-eye-pop {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.auth-remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-soft);
+}
+
+.auth-remember input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--baby-pink-deep);
 }
 
 .auth-switch {
@@ -2723,6 +2847,15 @@ body {
   .auth-field input {
     min-height: 48px;
     font-size: 16px; /* Prevents iOS zoom on focus */
+  }
+  
+  .auth-field .password-wrap {
+    min-height: 48px;
+  }
+  
+  .auth-field .password-wrap input {
+    min-height: 48px;
+    font-size: 16px;
   }
   
   /* Home main */

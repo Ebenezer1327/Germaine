@@ -103,14 +103,21 @@ async function initDb(pool) {
         user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
         title TEXT NOT NULL,
         description TEXT,
-        due_date TIMESTAMPTZ,
-        reminder_time TIMESTAMPTZ,
+        due_date TEXT,
+        reminder_time TEXT,
+        timezone_offset INTEGER,
         completed BOOLEAN DEFAULT FALSE,
         reminder_sent BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
     console.log('Ensured todos table exists');
+
+    try {
+      await pool.query('ALTER TABLE todos ADD COLUMN IF NOT EXISTS timezone_offset INTEGER');
+    } catch (migErr) {
+      console.log('Todo migration skipped:', migErr.message);
+    }
 
     // Create push_subscriptions table if it doesn't exist
     await pool.query(`

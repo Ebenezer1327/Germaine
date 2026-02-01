@@ -29,7 +29,7 @@
       </header>
 
       <section class="auth-card">
-        <form class="auth-form" method="post" action="/login">
+        <form class="auth-form" method="post" action="/login" id="loginForm">
           <div class="auth-field">
             <label for="username">Username</label>
             <input
@@ -44,15 +44,30 @@
 
           <div class="auth-field">
             <label for="password">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autocomplete="current-password"
-              required
-              placeholder="Your password"
-            />
+            <div class="password-wrap">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                required
+                placeholder="Your password"
+              />
+              <button type="button" class="password-toggle" id="passwordToggle" title="Show password" aria-label="Show password" data-eye="open">
+                <span class="password-toggle-icon-wrap">
+                  <svg class="password-toggle-svg" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <g class="icon-open"><path d="M12 5C7 5 3 12 3 12s4 7 9 7 9-7 9-7-4-7-9-7z"/><circle cx="12" cy="12" r="2.5"/></g>
+                    <g class="icon-closed"><path d="M12 5C7 5 3 12 3 12s4 7 9 7 9-7 9-7-4-7-9-7z"/><circle cx="12" cy="12" r="2.5"/><line x1="4" y1="4" x2="20" y2="20"/></g>
+                  </svg>
+                </span>
+              </button>
+            </div>
           </div>
+
+          <label class="auth-remember">
+            <input type="checkbox" name="remember_me" id="rememberMe" value="1" />
+            <span>Save login</span>
+          </label>
 
           <button type="submit" class="btn btn--primary auth-submit">
             Log in
@@ -69,6 +84,49 @@
           .then(reg => console.log('SW registered:', reg.scope))
           .catch(err => console.log('SW registration failed:', err));
       }
+
+      (function () {
+        var passwordInput = document.getElementById('password');
+        var passwordToggle = document.getElementById('passwordToggle');
+        var loginForm = document.getElementById('loginForm');
+        var usernameInput = document.getElementById('username');
+        var rememberCheckbox = document.getElementById('rememberMe');
+        var SAVED_USERNAME_KEY = 'germaine_saved_username';
+
+        if (passwordToggle && passwordInput) {
+          passwordToggle.addEventListener('click', function () {
+            var isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            passwordToggle.setAttribute('title', isPassword ? 'Hide password' : 'Show password');
+            passwordToggle.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+            passwordToggle.setAttribute('data-eye', isPassword ? 'closed' : 'open');
+            passwordToggle.classList.add('pop');
+            var btn = passwordToggle;
+            btn.addEventListener('animationend', function removePop() {
+              btn.removeEventListener('animationend', removePop);
+              btn.classList.remove('pop');
+            });
+          });
+        }
+
+        if (loginForm && rememberCheckbox) {
+          loginForm.addEventListener('submit', function () {
+            if (rememberCheckbox.checked && usernameInput.value.trim()) {
+              try { localStorage.setItem(SAVED_USERNAME_KEY, usernameInput.value.trim()); } catch (e) {}
+            } else {
+              try { localStorage.removeItem(SAVED_USERNAME_KEY); } catch (e) {}
+            }
+          });
+        }
+
+        try {
+          var saved = localStorage.getItem(SAVED_USERNAME_KEY);
+          if (saved && usernameInput) {
+            usernameInput.value = saved;
+            if (rememberCheckbox) rememberCheckbox.checked = true;
+          }
+        } catch (e) {}
+      })();
     </script>
   </body>
   </html>
