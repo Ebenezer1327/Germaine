@@ -28,6 +28,10 @@ function setupPageRoutes(app) {
     sendHtml(res, path.join(publicDir, 'home.html'));
   });
 
+  app.get('/particles', requireAuth, (req, res) => {
+    sendHtml(res, path.join(publicDir, 'particles.html'));
+  });
+
   app.get('/mystery', requireAuth, (req, res) => {
     sendHtml(res, path.join(publicDir, 'mystery.html'));
   });

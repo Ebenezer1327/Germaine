@@ -53,7 +53,10 @@ self.addEventListener('fetch', (event) => {
   if (event.request.mode === 'navigate') {
     event.respondWith(
       fetch(event.request, { cache: 'no-store' })
-        .catch(() => caches.match('/'))
+        .catch(() => caches.match('/').then((cached) => cached || new Response(
+          '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Offline</title></head><body><h1>Offline</h1><p>Please check your connection and try again.</p></body></html>',
+          { status: 503, statusText: 'Service Unavailable', headers: { 'Content-Type': 'text/html; charset=utf-8' } }
+        )))
     );
     return;
   }
@@ -71,7 +74,7 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       })
-      .catch(() => caches.match(event.request))
+      .catch(() => caches.match(event.request).then((cached) => cached || new Response('', { status: 404, statusText: 'Not Found' })))
   );
 });
 

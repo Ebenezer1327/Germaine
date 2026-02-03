@@ -53,11 +53,16 @@
                 required
                 placeholder="Your password"
               />
-              <button type="button" class="password-toggle" id="passwordToggle" title="Show password" aria-label="Show password" data-eye="open">
+              <button type="button" class="password-toggle password-eye-btn" id="passwordToggle" title="Show password" aria-label="Show password" data-eye="open">
                 <span class="password-toggle-icon-wrap">
-                  <svg class="password-toggle-svg" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <g class="icon-open"><path d="M12 5C7 5 3 12 3 12s4 7 9 7 9-7 9-7-4-7-9-7z"/><circle cx="12" cy="12" r="2.5"/></g>
-                    <g class="icon-closed"><path d="M12 5C7 5 3 12 3 12s4 7 9 7 9-7 9-7-4-7-9-7z"/><circle cx="12" cy="12" r="2.5"/><line x1="4" y1="4" x2="20" y2="20"/></g>
+                  <svg class="password-eye-svg" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
+                    <path class="password-eye-outline" d="M12 5C7 5 3 12 3 12s4 7 9 7 9-7 9-7-4-7-9-7z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <g class="password-eye-iris" transform-origin="12px 12px">
+                      <circle class="iris-base" cx="12" cy="12" r="4" fill="rgb(59, 48, 84)"/>
+                      <circle class="iris-pupil" cx="12" cy="12" r="1.5" fill="black"/>
+                      <circle class="iris-glare" cx="13" cy="11" r="0.7" fill="rgba(255,255,255,0.6)"/>
+                    </g>
+                    <line class="password-eye-closed" x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                   </svg>
                 </span>
               </button>

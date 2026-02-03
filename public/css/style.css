@@ -54,6 +54,252 @@ body {
   right: -40px;
 }
 
+.particles-page .particles-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.particles-page .nav {
+  position: relative;
+  z-index: 2;
+}
+
+.particles-main {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100px 24px 80px;
+}
+
+.particles-page .hello-section {
+  margin-top: 40px;
+  padding: 60px 24px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(40px) scale(0.9);
+  transition: opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.particles-page .hello-section.hello-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.particles-page .hello-section--hero {
+  margin-top: 0;
+}
+
+.particles-page .hello-title {
+  font-family: "Pacifico", cursive;
+  font-size: clamp(3rem, 10vw, 5rem);
+  color: var(--baby-pink-deep);
+  text-shadow: 0 4px 20px rgba(255, 158, 201, 0.4);
+  margin: 0;
+}
+
+.particles-cta {
+  margin-top: 40px;
+  padding: 12px 28px;
+  background: linear-gradient(145deg, var(--baby-pink-deep), #ff7eb8);
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 999px;
+  box-shadow: 0 6px 20px rgba(255, 158, 201, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.particles-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 158, 201, 0.5);
+}
+
+/* Heart beat animation - particles page */
+.particles-page .heart-beat {
+  color: var(--baby-pink-deep);
+  display: block;
+  margin: 0 auto 24px;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+}
+.particles-page .heart-beat .heart__border,
+.particles-page .heart-beat .heart__vein,
+.particles-page .heart-beat .heart__vein-group {
+  animation-duration: 1s;
+  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  animation-iteration-count: infinite;
+}
+.particles-page .heart-beat .heart__border {
+  transform-origin: 16px 16px;
+}
+.particles-page .heart-beat .heart__border--fade {
+  animation-name: heart-border-fade;
+}
+.particles-page .heart-beat .heart__border--offset-pulse {
+  animation-name: heart-border-offset, heart-border-pulse;
+}
+.particles-page .heart-beat .heart__border--pulse {
+  animation-name: heart-border-pulse;
+}
+.particles-page .heart-beat .heart__vein-group {
+  animation-name: heart-vein-group-pulse;
+  transform-origin: 9.5px 23.5px;
+}
+.particles-page .heart-beat .heart__vein--all1,
+.particles-page .heart-beat .heart__vein--pulse1 {
+  transform-origin: 9.5px 12.5px;
+}
+.particles-page .heart-beat .heart__vein--all1 {
+  animation-name: heart-vein-fade1, heart-vein-offset1, heart-vein-pulse1;
+}
+.particles-page .heart-beat .heart__vein--pulse1 {
+  animation-name: heart-vein-pulse1;
+}
+.particles-page .heart-beat .heart__vein--all2,
+.particles-page .heart-beat .heart__vein--pulse2 {
+  transform-origin: 9.5px 12.5px;
+}
+.particles-page .heart-beat .heart__vein--all2 {
+  animation-name: heart-vein-fade2, heart-vein-offset2, heart-vein-pulse2;
+}
+.particles-page .heart-beat .heart__vein--pulse2 {
+  animation-name: heart-vein-pulse2;
+}
+.particles-page .heart-beat .heart__vein--all3,
+.particles-page .heart-beat .heart__vein--pulse3 {
+  transform-origin: 10.2px 14px;
+}
+.particles-page .heart-beat .heart__vein--all3 {
+  animation-name: heart-vein-fade3, heart-vein-offset3, heart-vein-pulse3;
+}
+.particles-page .heart-beat .heart__vein--pulse3 {
+  animation-name: heart-vein-pulse3;
+}
+.particles-page .heart-beat .heart__vein--all4,
+.particles-page .heart-beat .heart__vein--pulse4 {
+  transform-origin: 12px 19.3px;
+}
+.particles-page .heart-beat .heart__vein--all4 {
+  animation-name: heart-vein-fade4, heart-vein-offset4, heart-vein-pulse4;
+}
+.particles-page .heart-beat .heart__vein--pulse4 {
+  animation-name: heart-vein-pulse4;
+}
+@keyframes heart-border-fade {
+  from, 98%, to { opacity: 0; }
+  5%, 93% { opacity: 1; }
+}
+@keyframes heart-border-offset {
+  from { stroke-dashoffset: 39; }
+  50% { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -39; }
+}
+@keyframes heart-border-pulse {
+  from, to {
+    animation-timing-function: cubic-bezier(0.32, 0, 0.67, 0);
+    transform: scale(1);
+  }
+  50% {
+    animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+    transform: scale(1.125);
+  }
+}
+@keyframes heart-vein-group-pulse {
+  from, to {
+    animation-timing-function: cubic-bezier(0.32, 0, 0.67, 0);
+    transform: translate(0, 0) rotate(0);
+  }
+  50% {
+    animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+    transform: translate(-2px, -0.5px) rotate(5deg);
+  }
+}
+@keyframes heart-vein-fade1 {
+  from, 89%, to { opacity: 0; }
+  5%, 84% { opacity: 1; }
+}
+@keyframes heart-vein-offset1 {
+  from { stroke-dashoffset: 14.1; }
+  25%, 50% { stroke-dashoffset: 0; }
+  90%, to { stroke-dashoffset: -14.1; }
+}
+@keyframes heart-vein-pulse1 {
+  from, to {
+    animation-timing-function: cubic-bezier(0.32, 0, 0.67, 0);
+    transform: rotate(0);
+  }
+  50% {
+    animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+    transform: rotate(-9deg);
+  }
+}
+@keyframes heart-vein-fade2 {
+  from, 85% { opacity: 1; }
+  90%, to { opacity: 0; }
+}
+@keyframes heart-vein-offset2 {
+  from, 11% { stroke-dashoffset: 4.6; }
+  36%, 55% { stroke-dashoffset: 0; }
+  95%, to { stroke-dashoffset: -4.6; }
+}
+@keyframes heart-vein-pulse2 {
+  from, to {
+    animation-timing-function: cubic-bezier(0.32, 0, 0.67, 0);
+    transform: rotate(0);
+  }
+  50% {
+    animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+    transform: rotate(9deg);
+  }
+}
+@keyframes heart-vein-fade3 {
+  from, 91% { opacity: 1; }
+  96%, to { opacity: 0; }
+}
+@keyframes heart-vein-offset3 {
+  from, 12% { stroke-dashoffset: 9.1; }
+  37%, 59.5% { stroke-dashoffset: 0; }
+  99.5%, to { stroke-dashoffset: -9.1; }
+}
+@keyframes heart-vein-pulse3 {
+  from, to {
+    animation-timing-function: cubic-bezier(0.32, 0, 0.67, 0);
+    transform: rotate(0);
+  }
+  50% {
+    animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+    transform: rotate(1deg);
+  }
+}
+@keyframes heart-vein-fade4 {
+  from, 92% { opacity: 1; }
+  97%, to { opacity: 0; }
+}
+@keyframes heart-vein-offset4 {
+  from, 25.75% { stroke-dashoffset: 4.1; }
+  50%, 71% { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -4.1; }
+}
+@keyframes heart-vein-pulse4 {
+  from, to {
+    animation-timing-function: cubic-bezier(0.32, 0, 0.67, 0);
+    transform: rotate(0);
+  }
+  50% {
+    animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+    transform: rotate(-18deg);
+  }
+}
+
 .container {
   max-width: 960px;
   width: 100%;
@@ -1529,17 +1775,34 @@ body {
   transform-origin: center;
 }
 
-.password-toggle-svg {
-  width: 20px;
-  height: 20px;
+.password-toggle-svg,
+.password-eye-svg {
+  width: 24px;
+  height: 24px;
   display: block;
 }
 
-.password-toggle[data-eye="open"] .icon-closed {
+.password-eye-svg {
+  display: block;
+  overflow: visible;
+}
+
+.password-eye-iris {
+  transform-origin: 12px 12px;
+  animation: password-eye-sway 8s ease-in-out infinite;
+}
+
+@keyframes password-eye-sway {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-6px, 0); }
+  75% { transform: translate(6px, 0); }
+}
+
+.password-toggle[data-eye="open"] .password-eye-closed {
   display: none;
 }
 
-.password-toggle[data-eye="closed"] .icon-open {
+.password-toggle[data-eye="closed"] .password-eye-iris {
   display: none;
 }
 
