@@ -2049,7 +2049,7 @@ body {
   box-shadow: none;
 }
 
-/* Cute 3D bunny */
+/* Germaine & Snowy card */
 .rabbit-card {
   background: linear-gradient(145deg, var(--baby-pink-soft), var(--accent-cream));
   border-radius: 28px;
@@ -2057,6 +2057,7 @@ body {
   box-shadow: var(--card-shadow);
   border: 1px solid rgba(255, 182, 214, 0.7);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
@@ -2064,13 +2065,15 @@ body {
   min-height: 260px;
 }
 
-.rabbit-card #rabbit-canvas {
-  width: 220px;
-  height: 220px;
+.rabbit-card .rabbit-image {
+  width: 200px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
 }
 
 .rabbit-name {
-  margin-top: 10px;
+  margin-top: 4px;
   font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -4416,9 +4419,8 @@ body {
     min-height: 220px;
   }
   
-  .rabbit-card #rabbit-canvas {
-    width: 180px;
-    height: 180px;
+  .rabbit-card .rabbit-image {
+    width: 160px;
   }
   
   .countdown-card {
@@ -4720,9 +4722,8 @@ body {
     min-height: 180px;
   }
   
-  .rabbit-card #rabbit-canvas {
-    width: 150px;
-    height: 150px;
+  .rabbit-card .rabbit-image {
+    width: 130px;
   }
 }
 
@@ -4755,4 +4756,3 @@ html {
     scrollbar-width: none;
   }
 }
-

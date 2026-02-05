@@ -19,6 +19,28 @@ body
   outline: none;
 }
 
+.memory-lane-back {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 100;
+  padding: 10px 18px;
+  background: rgba(255, 255, 255, 0.85);
+  color: #4b2840;
+  font-family: "Quicksand", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 182, 214, 0.6);
+  box-shadow: 0 4px 16px rgba(75, 40, 64, 0.15);
+  transition: background 0.2s, transform 0.2s;
+}
+.memory-lane-back:hover {
+  background: rgba(255, 255, 255, 0.98);
+  transform: translateX(-2px);
+}
+
 /* Side detail panel - slides in from right, doesn't cover the photo */
 .photo-detail-panel {
   position: fixed;
@@ -84,4 +106,100 @@ body
   line-height: 1.6;
   border: 1px solid rgba(255, 182, 214, 0.4);
   white-space: pre-line;
+}
+
+/* On mobile: caption as bottom sheet so photo stays visible above */
+@media (max-width: 768px) {
+  .photo-detail-panel {
+    top: auto;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: 45vh;
+    transform: translateY(100%);
+    border-left: none;
+    border-top: 2px solid rgba(255, 182, 214, 0.6);
+    box-shadow: 0 -8px 32px rgba(75, 40, 64, 0.15);
+    overflow-y: auto;
+  }
+  .photo-detail-panel.open {
+    transform: translateY(0);
+    box-shadow: 0 -12px 40px rgba(75, 40, 64, 0.2);
+  }
+  .photo-detail-content {
+    max-height: 30vh;
+    overflow-y: auto;
+  }
+}
+
+/* Global music player - top right, About You by The 1975 */
+.global-music-player {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 99;
+  font-family: "Quicksand", sans-serif;
+}
+.global-music-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 182, 214, 0.7);
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4b2840;
+  box-shadow: 0 4px 16px rgba(75, 40, 64, 0.12);
+  transition: background 0.2s, transform 0.15s;
+}
+.global-music-btn:hover {
+  background: rgba(255, 255, 255, 0.98);
+  transform: scale(1.02);
+}
+.global-music-btn.playing .global-music-icon {
+  animation: global-music-pulse 1.2s ease-in-out infinite;
+}
+@keyframes global-music-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.1); }
+}
+.global-music-icon {
+  font-size: 1.1rem;
+  color: #ff69b4;
+}
+.global-music-label {
+  white-space: nowrap;
+}
+.global-music-embed {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  border: none;
+  visibility: hidden;
+}
+@media (max-width: 480px) {
+  .global-music-player {
+    top: 12px;
+    right: 12px;
+  }
+  .global-music-label {
+    display: none;
+  }
+  .global-music-btn {
+    padding: 12px 14px;
+    font-size: 1rem;
+    box-shadow: 0 4px 20px rgba(75, 40, 64, 0.2);
+  }
+  .global-music-icon {
+    font-size: 1.3rem;
+  }
 }
